@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Podcast Notebook</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── TOKENS ── */
+    :root {
+      --bg:          #F7F3EC;
+      --bg-card:     #FFFFFF;
+      --bg-card-h:   #FDF9F4;
+      --bg-input:    #FFFFFF;
+      --bg-chip:     #EFE8DC;
+      --bg-chip-a:   #B5451B;
+      --text:        #18160F;
+      --text-mid:    #4A4139;
+      --text-muted:  #8C7E74;
+      --accent:      #B5451B;
+      --accent-l:    #FAE2D9;
+      --border:      #DDD0BF;
+      --border-card: #E8E0D4;
+      --shadow:      0 1px 3px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.05);
+      --shadow-h:    0 4px 12px rgba(0,0,0,0.10), 0 12px 32px rgba(0,0,0,0.08);
+      --radius:      14px;
+      --font-d:      'Bricolage Grotesque', Georgia, serif;
+      --font-b:      'DM Sans', system-ui, sans-serif;
+      --font-m:      'JetBrains Mono', monospace;
+    }
+
+    [data-theme="dark"] {
+      --bg:          #1A1714;
+      --bg-card:     #242018;
+      --bg-card-h:   #2C2822;
+      --bg-input:    #2C2822;
+      --bg-chip:     #2C2822;
+      --bg-chip-a:   #B5451B;
+      --text:        #F0EBE3;
+      --text-mid:    #B5A494;
+      --text-muted:  #7C6E61;
+      --accent:      #D4623A;
+      --accent-l:    #3D1E10;
+      --border:      #332E28;
+      --border-card: #2E2922;
+      --shadow:      0 1px 3px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.2);
+      --shadow-h:    0 4px 12px rgba(0,0,0,0.4), 0 12px 32px rgba(0,0,0,0.3);
+    }
+
+    body {
+      font-family: var(--font-b);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+    }
+
+    .topbar-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .topbar-name {
+      font-family: var(--font-d);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-mid);
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+
+    .icon-btn:hover { background: var(--bg-chip); color: var(--text); }
+    .icon-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .icon-btn svg { width: 16px; height: 16px; pointer-events: none; }
+
+    /* ── MAIN ── */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 4rem;
+    }
+
+    /* ── TOOLBAR ── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 200px;
+      max-width: 340px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+      width: 15px; height: 15px;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 38px;
+      padding: 0 0.75rem 0 2.25rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-input);
+      color: var(--text);
+      font-family: var(--font-b);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-input:focus { border-color: var(--accent); }
+
+    .filter-chips {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      flex: 1;
+    }
+
+    .chip {
+      height: 34px;
+      padding: 0 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--bg-chip);
+      color: var(--text-mid);
+      font-family: var(--font-b);
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .chip:hover { border-color: var(--accent); color: var(--accent); }
+
+    .chip.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .sort-select {
+      height: 38px;
+      padding: 0 2rem 0 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-input);
+      color: var(--text);
+      font-family: var(--font-b);
+      font-size: 0.82rem;
+      cursor: pointer;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238C7E74' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.6rem center;
+      transition: border-color 0.15s;
+    }
+
+    .sort-select:focus { border-color: var(--accent); }
+
+    .view-toggle {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .view-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .view-btn:first-child { border-right: 1px solid var(--border); }
+    .view-btn:hover { background: var(--bg-chip); color: var(--text); }
+    .view-btn.active { background: var(--bg-chip); color: var(--text); }
+    .view-btn svg { width: 15px; height: 15px; pointer-events: none; }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      margin-bottom: 1.25rem;
+    }
+
+    .section-title {
+      font-family: var(--font-d);
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+
+    .section-count {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: var(--font-m);
+      margin-top: 0.2rem;
+    }
+
+    /* ── GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    /* ── LIST ── */
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    /* ── CARD (grid) ── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      transition: box-shadow 0.2s, transform 0.2s, background 0.15s;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-h);
+      transform: translateY(-2px);
+      background: var(--bg-card-h);
+    }
+
+    .card-emoji {
+      font-size: 2rem;
+      line-height: 1;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .card-title {
+      font-family: var(--font-d);
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .card-date {
+      font-family: var(--font-m);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .card-dot {
+      width: 3px; height: 3px;
+      background: var(--border);
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .card-source {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+    }
+
+    .card-persona {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-family: var(--font-m);
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-l);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+    }
+
+    /* ── ROW (list view) ── */
+    .row {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: grid;
+      grid-template-columns: 2.5rem 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+
+    .row:hover {
+      background: var(--bg-card-h);
+      box-shadow: var(--shadow);
+    }
+
+    .row-emoji {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .row-title {
+      font-family: var(--font-d);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+
+    .row-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: var(--font-m);
+    }
+
+    .row-right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .row-persona {
+      font-family: var(--font-m);
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-l);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 0.25rem;
+    }
+
+    .row-date {
+      font-family: var(--font-m);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      text-align: center;
+      padding: 5rem 2rem;
+      grid-column: 1 / -1;
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .empty-title {
+      font-family: var(--font-d);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .empty-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 32ch;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .topbar { padding: 0 1rem; }
+      .topbar-name { display: none; }
+      .main { padding: 1.5rem 1rem 3rem; }
+      .grid { grid-template-columns: 1fr; }
+      .toolbar { gap: 0.5rem; }
+      .search-wrap { max-width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card, .row { transition: none; }
+    }
+
+    /* ── FOCUS ── */
+    a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <a class="topbar-brand" href="#">
+    <div class="topbar-icon">🎧</div>
+    <span class="topbar-name">My Podcast Notebook</span>
+  </a>
+  <div class="topbar-actions">
+    <button class="icon-btn" id="theme-toggle" title="Toggle dark/light mode" aria-label="Toggle theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input class="search-input" type="search" id="search" placeholder="Search by source…" aria-label="Search by source">
+    </div>
+
+    <div class="filter-chips" id="filter-chips" role="group" aria-label="Filter by persona">
+      <!-- dynamically populated -->
+    </div>
+
+    <select class="sort-select" id="sort" aria-label="Sort order">
+      <option value="newest">Most recent</option>
+      <option value="oldest">Oldest first</option>
+      <option value="az">A → Z</option>
+    </select>
+
+    <div class="view-toggle" role="group" aria-label="View mode">
+      <button class="view-btn active" id="btn-grid" title="Grid view" aria-pressed="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      </button>
+      <button class="view-btn" id="btn-list" title="List view" aria-pressed="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- SECTION HEADER -->
+  <div class="section-header">
+    <div class="section-title">All playbooks</div>
+    <div class="section-count" id="count-label"></div>
+  </div>
+
+  <!-- CARDS -->
+  <div id="grid" class="grid" role="list"></div>
+
+</main>
+
+<script>
+  const MANIFEST = 'manifest.json';
+
+  // ── Theme ─────────────────────────────────────────────────────
+  const root = document.documentElement;
+  const themeBtn = document.getElementById('theme-toggle');
+  const stored = localStorage.getItem('notebook-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const initDark = stored ? stored === 'dark' : prefersDark;
+  if (initDark) root.setAttribute('data-theme', 'dark');
+
+  themeBtn.addEventListener('click', () => {
+    const isDark = root.getAttribute('data-theme') === 'dark';
+    root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('notebook-theme', isDark ? 'light' : 'dark');
+    updateThemeIcon(!isDark);
+  });
+
+  function updateThemeIcon(isDark) {
+    themeBtn.innerHTML = isDark
+      ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`
+      : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`;
+  }
+  updateThemeIcon(initDark);
+
+  // ── State ─────────────────────────────────────────────────────
+  let allPlaybooks = [];
+  let activePersona = 'all';
+  let searchQuery = '';
+  let sortOrder = 'newest';
+  let viewMode = 'grid';
+
+  // ── Load manifest ─────────────────────────────────────────────
+  fetch(MANIFEST)
+    .then(r => r.json())
+    .then(data => {
+      allPlaybooks = data;
+      buildPersonaChips(data);
+      render();
+    })
+    .catch(() => {
+      document.getElementById('grid').innerHTML =
+        `<div class="empty">
+          <span class="empty-icon">📭</span>
+          <div class="empty-title">No playbooks found</div>
+          <div class="empty-sub">Make sure manifest.json is in the same folder as this page.</div>
+        </div>`;
+    });
+
+  // ── Persona chips — dynamically generated ────────────────────
+  function buildPersonaChips(data) {
+    const personas = ['all', ...new Set(data.map(p => p.persona).sort())];
+    const container = document.getElementById('filter-chips');
+    container.innerHTML = '';
+    personas.forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = 'chip' + (p === 'all' ? ' active' : '');
+      btn.textContent = p === 'all' ? 'All' : capitalize(p);
+      btn.dataset.persona = p;
+      btn.setAttribute('aria-pressed', p === 'all' ? 'true' : 'false');
+      btn.addEventListener('click', () => {
+        activePersona = p;
+        container.querySelectorAll('.chip').forEach(c => {
+          c.classList.toggle('active', c.dataset.persona === p);
+          c.setAttribute('aria-pressed', c.dataset.persona === p ? 'true' : 'false');
+        });
+        render();
+      });
+      container.appendChild(btn);
+    });
+  }
+
+  // ── Filtering + sorting ───────────────────────────────────────
+  function filtered() {
+    return allPlaybooks
+      .filter(p => {
+        const matchPersona = activePersona === 'all' || p.persona === activePersona;
+        const q = searchQuery.toLowerCase();
+        const matchSearch = !q || p.source.toLowerCase().includes(q) || p.title.toLowerCase().includes(q);
+        return matchPersona && matchSearch;
+      })
+      .sort((a, b) => {
+        if (sortOrder === 'newest') return b.date.localeCompare(a.date);
+        if (sortOrder === 'oldest') return a.date.localeCompare(b.date);
+        return a.title.localeCompare(b.title);
+      });
+  }
+
+  // ── Render ────────────────────────────────────────────────────
+  function render() {
+    const list = filtered();
+    const container = document.getElementById('grid');
+    const label = document.getElementById('count-label');
+
+    container.className = viewMode === 'grid' ? 'grid' : 'list';
+    label.textContent = `${list.length} playbook${list.length !== 1 ? 's' : ''}`;
+
+    if (list.length === 0) {
+      container.innerHTML = `
+        <div class="empty">
+          <span class="empty-icon">🔍</span>
+          <div class="empty-title">Nothing here yet</div>
+          <div class="empty-sub">Try a different filter, or generate a new playbook and add it to your notebook.</div>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = list.map(p =>
+      viewMode === 'grid' ? cardHTML(p) : rowHTML(p)
+    ).join('');
+  }
+
+  function cardHTML(p) {
+    return `
+      <a class="card" href="${p.filename}" role="listitem" aria-label="${p.title}">
+        <span class="card-persona">${capitalize(p.persona)}</span>
+        <span class="card-emoji" aria-hidden="true">${p.emoji}</span>
+        <div class="card-title">${p.title}</div>
+        <div class="card-meta">
+          <span class="card-date">${formatDate(p.date)}</span>
+          <span class="card-dot" aria-hidden="true"></span>
+          <span class="card-source" title="${p.source}">${p.source}</span>
+        </div>
+      </a>`;
+  }
+
+  function rowHTML(p) {
+    return `
+      <a class="row" href="${p.filename}" role="listitem" aria-label="${p.title}">
+        <span class="row-emoji" aria-hidden="true">${p.emoji}</span>
+        <div>
+          <div class="row-title">${p.title}</div>
+          <div class="row-sub">${p.source}</div>
+        </div>
+        <div class="row-right">
+          <span class="row-persona">${capitalize(p.persona)}</span>
+          <span class="row-date">${formatDate(p.date)}</span>
+        </div>
+      </a>`;
+  }
+
+  // ── Events ────────────────────────────────────────────────────
+  document.getElementById('search').addEventListener('input', e => {
+    searchQuery = e.target.value;
+    render();
+  });
+
+  document.getElementById('sort').addEventListener('change', e => {
+    sortOrder = e.target.value;
+    render();
+  });
+
+  document.getElementById('btn-grid').addEventListener('click', () => {
+    viewMode = 'grid';
+    document.getElementById('btn-grid').classList.add('active');
+    document.getElementById('btn-list').classList.remove('active');
+    document.getElementById('btn-grid').setAttribute('aria-pressed', 'true');
+    document.getElementById('btn-list').setAttribute('aria-pressed', 'false');
+    render();
+  });
+
+  document.getElementById('btn-list').addEventListener('click', () => {
+    viewMode = 'list';
+    document.getElementById('btn-list').classList.add('active');
+    document.getElementById('btn-grid').classList.remove('active');
+    document.getElementById('btn-list').setAttribute('aria-pressed', 'true');
+    document.getElementById('btn-grid').setAttribute('aria-pressed', 'false');
+    render();
+  });
+
+  // ── Helpers ───────────────────────────────────────────────────
+  function formatDate(iso) {
+    const [y, m, d] = iso.split('-');
+    return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function capitalize(str) {
+    const abbrevs = { pm: 'PM', ceo: 'CEO', cto: 'CTO', gtm: 'GTM', coo: 'COO', vp: 'VP' };
+    return abbrevs[str.toLowerCase()] || str.charAt(0).toUpperCase() + str.slice(1);
+  }
+</script>
+</body>
+</html>

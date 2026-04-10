@@ -1,0 +1,22 @@
+[
+  {
+    "id": "2026-04-09-spacex-pm-playbook",
+    "title": "7 lessons SpaceX taught me about product",
+    "source": "Atoms Are Cheap, Process Is Pricey — Max Olson",
+    "persona": "pm",
+    "date": "2026-04-09",
+    "emoji": "🚀",
+    "lessonCount": 7,
+    "filename": "playbooks/2026-04-09-spacex-pm-playbook.html"
+  },
+  {
+    "id": "2026-04-10-harness-manager-playbook",
+    "title": "6 lessons Harness Engineering taught me about managing people",
+    "source": "Harness Engineering",
+    "persona": "manager",
+    "date": "2026-04-10",
+    "emoji": "🏗️",
+    "lessonCount": 6,
+    "filename": "playbooks/2026-04-10-harness-manager-playbook.html"
+  }
+]

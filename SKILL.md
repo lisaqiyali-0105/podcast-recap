@@ -1,11 +1,11 @@
 ---
 name: podcast-recap
-description: Transcribe any podcast episode or YouTube video locally using Whisper — no API key, no cost. Accepts YouTube URLs, RSS feed + episode GUID, direct audio URLs, or local mp3 files. Supports role-specific analysis lenses (PM, Engineer, Designer, GTM) to generate perspective-tailored recaps. Drop-in replacement for pod2txt in follow-builders.
+description: Transcribe any podcast episode or YouTube video locally using Whisper — no API key, no cost. Accepts YouTube URLs, RSS feed + episode GUID, direct audio URLs, or local mp3 files. Generates role-specific HTML playbooks with pull quotes, PM/role translation, and a Quill reflections editor.
 ---
 
 # Podcast Recap
 
-Transcribe any audio locally using faster-whisper, then generate a role-specific analysis. Free, private, no API key needed.
+Transcribe any audio locally using mlx-whisper (Apple Silicon GPU) or faster-whisper (CPU fallback), then generate a role-specific HTML playbook. Free, private, no API key needed.
 
 ## Trigger phrases
 - "transcribe [YouTube URL]"
@@ -15,6 +15,11 @@ Transcribe any audio locally using faster-whisper, then generate a role-specific
 - "get me a transcript of [anything]"
 - "recap this podcast as an engineer / designer / GTM"
 - "[Podcast name], [episode description]" — no URL needed, Claude finds it
+
+## Script location
+`~/.claude/skills/podcast-recap/transcribe.py`
+
+> **Note for new installs:** After cloning the repo, copy `transcribe.py` to this path. See the README for install instructions.
 
 ## If the user doesn't have a URL
 
@@ -29,7 +34,7 @@ When the user describes an episode without providing a URL, find it first:
    - Use `--rss [RSS_URL] --guid [GUID]`
 
 3. **Set expectations on time:** Always tell the user how long transcription will take before starting.
-   - Times below assume mlx-whisper (Apple Silicon). CPU (faster-whisper fallback) is ~7–10× slower.
+   - Times below assume mlx-whisper (Apple Silicon). CPU fallback is ~7–10× slower.
    - `small` model: 30 min → ~1 min | 1 hour → ~2 min | 2 hours → ~4 min
    - `tiny` model: ~2× faster than small; use only if user explicitly wants speed over accuracy
 
@@ -47,29 +52,34 @@ When the user describes an episode without providing a URL, find it first:
 
 **Default when unsure:** `small`. It's fast enough on MLX and accurate enough for almost everything.
 
-## Script location
-`~/.claude/skills/transcribe-podcast/transcribe.py`
-
-> **Note for new installs:** This path is specific to the original author's machine. After cloning the repo, update this path to wherever you placed `transcribe.py`. See the README for install instructions.
-
 ## How to run
 
 ### YouTube URL
 ```bash
-python3 ~/.claude/skills/transcribe-podcast/transcribe.py \
+python3 ~/.claude/skills/podcast-recap/transcribe.py \
   --youtube "https://youtube.com/watch?v=..."
 ```
 
-### YouTube URL with persona lens
+### YouTube URL with persona lens + immediate reactions
 ```bash
-python3 ~/.claude/skills/transcribe-podcast/transcribe.py \
+python3 ~/.claude/skills/podcast-recap/transcribe.py \
   --youtube "https://youtube.com/watch?v=..." \
-  --persona engineer
+  --persona pm \
+  --notes "The 98% overhead stat blew my mind. Want to apply the idiot index to our roadmap."
 ```
 
-### RSS feed + GUID (follow-builders / pod2txt replacement)
+### With full personal context
 ```bash
-python3 ~/.claude/skills/transcribe-podcast/transcribe.py \
+python3 ~/.claude/skills/podcast-recap/transcribe.py \
+  --youtube "https://youtube.com/watch?v=..." \
+  --persona pm \
+  --context "PM at enterprise SaaS, working on AI search features for financial analysts" \
+  --notes "Really resonated with the constraint-focus idea"
+```
+
+### RSS feed + GUID
+```bash
+python3 ~/.claude/skills/podcast-recap/transcribe.py \
   --rss "https://feeds.example.com/podcast.rss" \
   --guid "episode-guid-here" \
   --persona gtm
@@ -77,51 +87,55 @@ python3 ~/.claude/skills/transcribe-podcast/transcribe.py \
 
 ### Direct audio URL
 ```bash
-python3 ~/.claude/skills/transcribe-podcast/transcribe.py \
+python3 ~/.claude/skills/podcast-recap/transcribe.py \
   --url "https://example.com/episode.mp3"
 ```
 
 ### Local file
 ```bash
-python3 ~/.claude/skills/transcribe-podcast/transcribe.py \
+python3 ~/.claude/skills/podcast-recap/transcribe.py \
   --mp3 "/path/to/file.mp3" \
   --persona designer
 ```
 
-### Model sizes (optional --model flag)
-- `tiny` — fastest, good accuracy
-- `base` — fast, better accuracy (default)
-- `small` — slower, great accuracy
-- `medium` — slow, excellent accuracy
+## All flags
+
+| Flag | Default | Description |
+|---|---|---|
+| `--youtube` | — | YouTube video URL |
+| `--url` | — | Direct audio file URL |
+| `--mp3` | — | Path to local .mp3 file |
+| `--rss` | — | RSS feed URL (requires `--guid`) |
+| `--guid` | — | Episode GUID (required with `--rss`) |
+| `--persona` | `pm` | Role lens for analysis (any free-text role) |
+| `--notes` | `""` | Immediate reactions after listening — woven into the analysis |
+| `--context` | `""` | Your specific situation — makes analysis specific to you, not just your role |
+| `--model` | `small` | Whisper model: `tiny`, `base`, `small`, `medium` |
+| `--output` | `~/Downloads/transcripts/` | Output directory for transcript file |
+
+Note: `--youtube`, `--url`, `--mp3`, `--rss` are mutually exclusive. One is required.
 
 ## Persona Lenses (--persona flag)
 
-The `--persona` flag is **open-ended** — pass any role, title, or description. The script doesn't limit you to a preset list. Claude infers what that role cares about and applies the right lens.
+The `--persona` flag is **open-ended** — pass any role, title, or description. Common roles get custom labels:
 
-```bash
---persona founder
---persona "chief of staff"
---persona investor
---persona "sales rep"
---persona "head of partnerships"
---persona "engineering manager"
---persona "early-stage startup ceo"
-```
-
-**How it works:** After transcription, the script appends a structured analysis instruction to stdout. Claude reads the full transcript + the instruction in one pass and generates a role-specific recap — no second call needed.
-
-The analysis prompt tells Claude: think about what this role actually cares about — their daily pressures, the decisions they own, the metrics they're held to — and apply that lens authentically. Not a generic filter.
-
-**Label customization:** Common roles get thoughtful bridge/action labels (e.g., `pm` → "The PM Translation / In Practice", `founder` → "The Founder Lens / This Week"). Any other role gets auto-labeled from the persona string.
-
----
+| Persona | Bridge label | Action label |
+|---|---|---|
+| `pm` | The PM Translation | In Practice |
+| `engineer` | The Engineering Takeaway | This Sprint |
+| `designer` | The Design Angle | Try This |
+| `founder` | The Founder Lens | This Week |
+| `ceo` | The CEO Lens | This Week |
+| `investor` | The Investor Read | Due Diligence Note |
+| `gtm` | The GTM Read | This Quarter |
+| Any other | The [Role] Lens | Try This |
 
 ## What it does
 1. Detects input type (YouTube / RSS+GUID / URL / local file)
 2. For YouTube: uses yt-dlp to download audio as mp3
-3. For RSS+GUID: fetches the RSS feed, finds the episode by GUID, downloads the .mp3 from the `<enclosure>` tag
+3. For RSS+GUID: fetches the RSS feed, finds episode by GUID, downloads the mp3 from `<enclosure>`
 4. For direct URLs: downloads the audio file
-5. Runs faster-whisper locally (no data sent anywhere)
+5. Tries **mlx-whisper** (Apple Silicon GPU) first — ~7–10× faster than CPU. Falls back to **faster-whisper** (CPU) if mlx-whisper isn't installed
 6. Saves transcript to `~/Downloads/transcripts/<title>.txt`
 7. Prints transcript to stdout
 8. Appends persona analysis request block — Claude reads both and generates the recap
@@ -141,26 +155,87 @@ Always confirm the file was saved and show the user:
 Then read the full stdout (transcript + analysis block) and generate the role-specific recap. Ask: "Want me to turn this into an HTML playbook?"
 
 ## Generating the HTML playbook
-After generating the recap, offer to build an editorial HTML page using the same format as the SpaceX PM Playbook (`~/Documents/spacex-pm-playbook.html`):
-- Pull quotes with dark bands
-- Role-specific bridge section (label varies by persona)
-- In-practice callout (amber)
-- Left sidebar navigation
-- Paginated lesson view
-- Quill reflections section
 
-The HTML output is persona-agnostic in structure — only the bridge labels and framing change.
+After generating the recap, offer to build an editorial HTML page. The reference design is the SpaceX PM Playbook at `~/Claude/podcast-recap/library/playbooks/2026-04-09-spacex-pm-playbook.html`.
+
+**Design spec:**
+- **Layout:** Single-scroll page, no pagination
+- **Header:** Sticky, with reading progress bar (2px line at bottom), nav links to each lesson
+- **Accent color:** Terracotta (`#B5451B`) on warm parchment (`#F7F3EC`)
+- **Pull quotes:** Left border (4px solid terracotta), light tinted background — no dark color blocks
+- **Each lesson has:**
+  - Large faded lesson number
+  - Lesson label (e.g., "On Cost") + title
+  - Pull quote from source
+  - Role bridge section (label varies by persona, e.g., "The PM Translation")
+  - In-practice callout (light terracotta tint, lightning bolt icon)
+- **Alternating backgrounds:** Even-numbered lessons use `#EFE8DC`
+- **Closing section:** "The Single Question" with the essay's closing argument
+- **Reflections:** Quill v2 rich-text editor, localStorage auto-save (date-keyed), prompt chip buttons
+
+The HTML structure is persona-agnostic — only the bridge labels and framing change per role.
+
+## Auto-saving to the library (MANDATORY)
+
+Every time an HTML playbook is generated, Claude must:
+
+1. **Save the HTML** to `~/Claude/podcast-recap/library/playbooks/YYYY-MM-DD-[slug].html`
+   - Slug = lowercase title, spaces → hyphens, special chars stripped
+   - Example: `2026-04-10-spacex-pm-playbook.html`
+
+2. **Update `~/Claude/podcast-recap/library/manifest.json`** — append one entry:
+   ```json
+   {
+     "id": "YYYY-MM-DD-[slug]",
+     "title": "[The playbook title from the hero h1]",
+     "source": "[Podcast/essay name — shown in hero-source-text]",
+     "persona": "[persona passed to --persona flag]",
+     "date": "YYYY-MM-DD",
+     "emoji": "[pick one relevant emoji]",
+     "lessonCount": [number of lesson sections],
+     "filename": "playbooks/YYYY-MM-DD-[slug].html"
+   }
+   ```
+
+3. **Commit and push both files** to GitHub:
+   ```bash
+   git -C ~/Claude/podcast-recap add library/playbooks/YYYY-MM-DD-[slug].html library/manifest.json
+   git -C ~/Claude/podcast-recap commit -m "Add playbook: [title]"
+   git -C ~/Claude/podcast-recap push origin main
+   ```
+
+This keeps the library at `https://lisaqiyali-0105.github.io/podcast-recap/library/` up to date automatically.
+
+**Emoji guide by persona:**
+| Persona | Emoji |
+|---|---|
+| pm | 🚀 |
+| engineer / cto | ⚙️ |
+| designer | 🎨 |
+| founder / ceo | 💡 |
+| investor | 📊 |
+| manager | 🏗️ |
+| gtm / sales | 📣 |
+| marketing | 🎯 |
+| any other | 📖 |
+
+## Dependencies
+- `mlx-whisper` (pip) — preferred on Apple Silicon (M1/M2/M3/M4)
+- `faster-whisper` (pip) — CPU fallback, works on any machine
+- `yt-dlp` (brew) — only needed for YouTube URLs
+- No API keys required
+
+Install:
+```bash
+pip3 install mlx-whisper        # Apple Silicon (fast)
+pip3 install faster-whisper     # CPU fallback
+brew install yt-dlp             # YouTube support
+```
 
 ## Using as a pod2txt replacement in follow-builders
-To replace the pod2txt call in `generate-feed.js`, the equivalent is:
 ```bash
-python3 ~/.claude/skills/transcribe-podcast/transcribe.py \
+python3 ~/.claude/skills/podcast-recap/transcribe.py \
   --rss "[podcast.rssUrl]" \
   --guid "[episode.guid]"
 ```
-The transcript is printed to stdout — same interface as pod2txt's ready response.
-
-## Dependencies
-- `faster-whisper` (pip) — already installed
-- `yt-dlp` (brew) — already installed, only needed for YouTube URLs
-- No API keys required
+The transcript is printed to stdout — same interface as pod2txt.

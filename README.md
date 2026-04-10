@@ -166,9 +166,11 @@ Common roles have custom labels built in (e.g., `founder` → "The Founder Lens 
 
 ## Example output
 
-[**View the SpaceX PM Playbook**](examples/spacex-pm-playbook.html) — a full podcast recap generated from the essay "Atoms Are Cheap, Process Is Pricey" by Max Olson, analyzed through the lens of a product manager.
+[**Browse the Playbook Library →**](library/) — all generated playbooks in one place, with search, persona filters, and dark/light mode.
 
-Open it locally: `open examples/spacex-pm-playbook.html`
+[**View the SpaceX PM Playbook**](library/playbooks/2026-04-09-spacex-pm-playbook.html) — a full recap generated from "Atoms Are Cheap, Process Is Pricey" by Max Olson, analyzed through the lens of a product manager.
+
+Open locally: `open library/index.html`
 
 ![Hero section showing the title and source citation](screenshots/1-hero.png)
 
