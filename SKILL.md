@@ -16,6 +16,20 @@ Transcribe any audio locally using mlx-whisper (Apple Silicon GPU) or faster-whi
 - "recap this podcast as an engineer / designer / GTM"
 - "[Podcast name], [episode description]" — no URL needed, Claude finds it
 
+## Step 0: Ask for immediate reactions (MANDATORY — do this before running the script)
+
+Before running `transcribe.py`, always ask:
+
+> "Before I generate anything — what's your immediate reaction from listening? What landed? Even one sentence is enough."
+
+Wait for the user's answer. Use it as the `--notes` value when running the script.
+
+**Why this matters:** This step activates your short-term memory before it fades, and anchors the analysis to *your* experience of the episode — not a generic reading of it. Skipping it produces a generic recap. Doing it produces one that's specific to what you actually got out of listening.
+
+**Exceptions:**
+- If the user already included their reactions in the trigger message (e.g., "the idiot index blew my mind — recap this"), extract that as `--notes` and skip the question.
+- If the user says "just transcribe, no notes" or "skip the reflection prompt", proceed without `--notes`.
+
 ## Script location
 `~/.claude/skills/podcast-recap/transcribe.py`
 

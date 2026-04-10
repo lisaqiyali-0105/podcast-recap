@@ -24,9 +24,9 @@ The workflow is designed around how your memory actually works, not around ideal
 
 **Step 1 — Listen normally.** No note-taking required. Just listen.
 
-**Step 2 — Capture your hot take immediately after.** Right when the episode ends, while you're still parked or walking in, voice-dictate 2–3 reactions using Wispr Flow (or just type them). These are your short-term memory: raw, unfiltered, immediate. Pass them as `--notes`.
+**Step 2 — Claude asks you first.** Before generating anything, Claude asks: *"What's your immediate reaction from listening? What landed?"* This activates your short-term memory before it fades and anchors the recap to your experience of the episode, not a generic reading of it. One sentence is enough. (If you're running the script directly without Claude, pass your reaction as `--notes`.)
 
-**Step 3 — Run podcast-recap.** The tool transcribes the full episode locally (no API key, runs on your machine), then generates a role-specific analysis connecting the podcast's big ideas to your actual work. A translation, not a summary.
+**Step 3 — Run podcast-recap.** The tool transcribes the full episode locally (no API key, runs on your machine), then generates a role-specific analysis connecting the podcast's big ideas to your actual work. Your reaction is woven in — so the output reflects what you actually got out of listening.
 
 **Step 4 — Review the note.** You get a beautiful HTML document with pull quotes, your role-specific bridge between the podcast's ideas and your job, and a "try this" section for each theme. Your notes are woven in; the analysis references what you flagged.
 
@@ -110,7 +110,7 @@ Spotify uses DRM — audio can't be extracted directly. But almost every podcast
 python3 transcribe.py --youtube "https://youtube.com/watch?v=..." --persona pm
 ```
 
-### With your immediate notes (recommended)
+### With your immediate reactions (required when running directly — Claude prompts for these automatically)
 ```bash
 python3 transcribe.py \
   --youtube "https://youtube.com/watch?v=..." \
