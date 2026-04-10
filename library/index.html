@@ -479,9 +479,6 @@
 <!-- MAIN -->
 <main class="main">
 
-  <!-- HELPER TEXT -->
-  <p class="filter-hint">Each note is written through a specific perspective — PM, manager, founder. Pick one to see how the same ideas translate depending on a unique point of view.</p>
-
   <!-- TOOLBAR -->
   <div class="toolbar">
     <div class="filter-chips" id="filter-chips" role="group" aria-label="Filter by perspective">
@@ -503,6 +500,9 @@
       </button>
     </div>
   </div>
+
+  <!-- HELPER TEXT -->
+  <p class="filter-hint">Each note is written through a specific perspective — PM, manager, founder. Pick one to see how the same ideas translate depending on a unique point of view.</p>
 
   <!-- SECTION HEADER -->
   <div class="section-header">
@@ -571,7 +571,7 @@
     personas.forEach(p => {
       const btn = document.createElement('button');
       btn.className = 'chip' + (p === 'all' ? ' active' : '');
-      btn.textContent = p === 'all' ? 'All' : capitalize(p);
+      btn.textContent = p === 'all' ? 'Unfiltered' : capitalize(p);
       btn.dataset.persona = p;
       btn.setAttribute('aria-pressed', p === 'all' ? 'true' : 'false');
       btn.addEventListener('click', () => {
