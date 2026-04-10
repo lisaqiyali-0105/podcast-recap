@@ -168,7 +168,7 @@ Common roles have custom labels built in (e.g., `founder` → "The Founder Lens 
 
 [**Browse the Playbook Library →**](library/) — all generated playbooks in one place, with search, persona filters, and dark/light mode.
 
-[**View the SpaceX PM Playbook**](library/playbooks/2026-04-09-spacex-pm-playbook.html) — a full recap generated from "Atoms Are Cheap, Process Is Pricey" by Max Olson, analyzed through the lens of a product manager.
+[**View the SpaceX PM Playbook**](library/notes/2026-04-09-spacex-pm-playbook.html) — a full recap generated from "Atoms Are Cheap, Process Is Pricey" by Max Olson, analyzed through the lens of a product manager.
 
 Open locally: `open library/index.html`
 

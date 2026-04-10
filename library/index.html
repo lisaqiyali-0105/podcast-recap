@@ -534,7 +534,7 @@
 
   <!-- SECTION HEADER -->
   <div class="section-header">
-    <div class="section-title">All playbooks</div>
+    <div class="section-title">All notes</div>
     <div class="section-count" id="count-label"></div>
   </div>
 
@@ -587,7 +587,7 @@
       document.getElementById('grid').innerHTML =
         `<div class="empty">
           <span class="empty-icon">📭</span>
-          <div class="empty-title">No playbooks found</div>
+          <div class="empty-title">No notes found</div>
           <div class="empty-sub">Make sure manifest.json is in the same folder as this page.</div>
         </div>`;
     });
@@ -638,14 +638,14 @@
     const label = document.getElementById('count-label');
 
     container.className = viewMode === 'grid' ? 'grid' : 'list';
-    label.textContent = `${list.length} playbook${list.length !== 1 ? 's' : ''}`;
+    label.textContent = `${list.length} note${list.length !== 1 ? 's' : ''}`;
 
     if (list.length === 0) {
       container.innerHTML = `
         <div class="empty">
           <span class="empty-icon">🔍</span>
           <div class="empty-title">Nothing here yet</div>
-          <div class="empty-sub">Try a different filter, or generate a new playbook and add it to your notebook.</div>
+          <div class="empty-sub">Try a different filter, or generate a new note and add it to your notebook.</div>
         </div>`;
       return;
     }

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Swipe Cards</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #FAF7F2;
+      --bg-quote: #F5EDDF;
+      --text:     #1C1A18;
+      --mid:      #5C5550;
+      --muted:    #9C918A;
+      --amber:    #D97706;
+      --amber-lt: #FEF3C7;
+      --amber-dk: #B45309;
+      --border:   #E5DDD2;
+      --card:     #FEFCF8;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      font-family: 'DM Sans', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── top meta ── */
+    .top-label {
+      position: fixed;
+      top: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      pointer-events: none;
+    }
+    .top-source {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .65rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--amber);
+    }
+    .top-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .65rem;
+      letter-spacing: .08em;
+      color: var(--muted);
+    }
+
+    /* ── stack ── */
+    #stack {
+      position: relative;
+      width: 380px;
+      height: 530px;
+    }
+
+    /* ── static pile cards — never move ── */
+    .pile {
+      position: absolute;
+      inset: 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.05);
+      pointer-events: none;
+    }
+    /* alternating fan: pile-2 is deepest */
+    .pile-2 { z-index: 1; transform: rotate(-3deg) translateY(26px) scale(0.93); }
+    .pile-1 { z-index: 2; transform: rotate(3.5deg) translateY(13px) scale(0.97); }
+
+    /* ── top (live) card ── */
+    #top-card {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 1.75rem 1.75rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: .9rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.04);
+      cursor: grab;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: none;
+      transform: rotate(-4deg);
+    }
+    #top-card::-webkit-scrollbar { display: none; }
+    #top-card:active { cursor: grabbing; }
+
+    /* ── card content ── */
+    .card-num {
+      position: absolute;
+      bottom: -.5rem; right: 1.25rem;
+      font-family: 'Bricolage Grotesque', serif;
+      font-size: 7rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--amber);
+      opacity: .07;
+      pointer-events: none;
+    }
+    .card-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .62rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--amber);
+    }
+    .card-title {
+      font-family: 'Bricolage Grotesque', serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -.01em;
+      color: var(--text);
+    }
+    .card-rule {
+      width: 2rem;
+      height: 2px;
+      background: var(--amber);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .card-quote {
+      border-left: 3px solid var(--amber);
+      background: var(--bg-quote);
+      border-radius: 0 8px 8px 0;
+      padding: .8rem 1rem;
+      font-family: 'Bricolage Grotesque', serif;
+      font-size: .85rem;
+      font-style: italic;
+      line-height: 1.6;
+      color: var(--mid);
+      flex-shrink: 0;
+    }
+    .card-bridge {
+      font-size: .83rem;
+      line-height: 1.7;
+      color: var(--mid);
+      flex: 1;
+    }
+    .card-action {
+      flex-shrink: 0;
+      background: var(--amber-lt);
+      border: 1px solid #FDE68A;
+      border-radius: 8px;
+      padding: .75rem .9rem;
+    }
+    .card-action-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .58rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--amber-dk);
+      font-weight: 600;
+      margin-bottom: .25rem;
+    }
+    .card-action-txt {
+      font-size: .78rem;
+      line-height: 1.6;
+      color: #78350F;
+    }
+
+    /* ── swipe badges ── */
+    .badge {
+      position: absolute;
+      top: 1.5rem;
+      padding: .3rem .7rem;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .08s;
+    }
+    .badge-next { right: 1.25rem; background: var(--amber-lt); color: var(--amber-dk); border: 1.5px solid var(--amber); }
+    .badge-back { left:  1.25rem; background: #FEE2E2; color: #991B1B; border: 1.5px solid #FCA5A5; }
+
+    /* ── dots ── */
+    .dots {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      pointer-events: none;
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: background .3s, transform .3s;
+    }
+    .dot.on { background: var(--amber); transform: scale(1.5); }
+
+    /* ── hint ── */
+    .hint {
+      position: fixed;
+      bottom: 3.75rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+      transition: opacity .5s;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-label">
+  <span class="top-source">SpaceX &times; PM Playbook</span>
+  <span class="top-count" id="count">1 / 7</span>
+</div>
+
+<div id="stack">
+  <!-- static pile — pure decoration, never touched by JS -->
+  <div class="pile pile-2"></div>
+  <div class="pile pile-1"></div>
+  <!-- single live card — only its content and transform change -->
+  <div id="top-card">
+    <div class="card-num"  id="c-num"></div>
+    <div class="card-tag"  id="c-tag"></div>
+    <h2 class="card-title" id="c-title"></h2>
+    <div class="card-rule"></div>
+    <blockquote class="card-quote"   id="c-quote"></blockquote>
+    <p class="card-bridge"           id="c-bridge"></p>
+    <div class="card-action">
+      <div class="card-action-lbl">Try this</div>
+      <p class="card-action-txt" id="c-action"></p>
+    </div>
+    <div class="badge badge-next" id="b-next">Next &#8594;</div>
+    <div class="badge badge-back" id="b-back">&#8592; Back</div>
+  </div>
+</div>
+
+<p class="hint" id="hint">Drag to swipe &nbsp;&middot;&nbsp; &larr;&rarr; keys</p>
+<div class="dots" id="dots"></div>
+
+<script>
+const CARDS = [
+  {
+    num: '01', tag: 'On Cost',
+    title: 'Ideas are cheap.<br>Shipping is expensive.',
+    quote: 'Materials cost of a rocket was around 2% of the typical price. 98 cents of every dollar was going somewhere other than what it was made of.',
+    bridge: 'In product, ideas are free. The expensive part is engineering time, coordination, context-switching, and review cycles. A PM who cannot ruthlessly prioritize adds cost at every layer.',
+    action: 'Run an idiot index on your roadmap. For every feature: ratio of eng weeks to user value delivered. High ratio = overhead you should question.'
+  },
+  {
+    num: '02', tag: 'On Requirements',
+    title: 'The best feature<br>is no feature.',
+    quote: 'The best part is no part. The best process is no process. If you are not adding back at least 10% of the requirements you deleted, you are not deleting enough.',
+    bridge: 'PMs inherit requirements from execs, customers, legal, and precedent. Every requirement needs an owner who can defend why it still exists. The ones from smart people are the most dangerous.',
+    action: 'Pick one requirement that has been on the list for months. Ask: who owns this? Can they defend it in 60 seconds? If not, put it in delete-pending for two weeks.'
+  },
+  {
+    num: '03', tag: 'On Validation',
+    title: 'Move until reality<br>corrects you.',
+    quote: 'SpaceX decided early they would learn by doing rather than planning to perfection. Mistakes were acceptable as long as you learned from them fast.',
+    bridge: 'Most teams iterate on mockups, not shipped code. Real feedback loops require putting something in front of users before you think it is ready. The discomfort is the point.',
+    action: 'Find one thing you are planning to spec for two more sprints. Ship a half-baked version now. Treat the user feedback as your actual spec.'
+  },
+  {
+    num: '04', tag: 'On Cadence',
+    title: 'Velocity beats<br>perfection.',
+    quote: 'The Falcon 9 exploded. Starship has exploded many times. Each explosion was a data point that moved them forward faster than any simulation could.',
+    bridge: 'In product, failure usually looks like a delayed launch or a scoped-down one. SpaceX normalized failure as a feature. Your job is making the case that a shipped 70% beats a delayed 100%.',
+    action: 'Before your next launch, write down what fast enough to learn looks like vs. stakeholder-approved perfect. If the gap is more than two sprints, push back on scope.'
+  },
+  {
+    num: '05', tag: 'On Focus',
+    title: 'Bet on the constraint<br>that matters most.',
+    quote: 'Musk kept coming back to: what is the actual critical path here? Not the list of things that need to happen. The one thing that makes everything else impossible.',
+    bridge: 'Most roadmaps are lists of things that should happen. Very few identify the single constraint that makes everything else possible. Finding the critical path is a PM superpower.',
+    action: 'In your next planning: what is the one thing that, if delayed, makes every other item irrelevant? Do not let the team leave without a clear answer. That is your P0.'
+  },
+  {
+    num: '06', tag: 'On Vision',
+    title: 'A mission that makes<br>tradeoffs obvious.',
+    quote: 'When the goal is make humanity multiplanetary, the resource allocation decisions get easier. Almost everything is justified. Almost nothing is a distraction.',
+    bridge: 'Vague missions force endless debate on every tradeoff. A sharp mission acts as a filter. It rules things in and out before anyone has to argue about them.',
+    action: "Write your team's operating mission in one sentence. If it does not help you decide between two competing priorities, it is not specific enough. Try again."
+  },
+  {
+    num: '07', tag: 'On Systems',
+    title: 'Build the machine<br>that builds the thing.',
+    quote: 'What SpaceX got good at was not rockets. It was the organizational system that could iterate rockets faster than anyone thought possible.',
+    bridge: 'Your job is not just to ship features. It is to build the process that lets your team ship better features faster. If every sprint feels like starting from scratch, this is what is missing.',
+    action: 'Audit one recurring friction point in your process. Just one. This sprint, fix the process, not the symptom.'
+  }
+];
+
+const card    = document.getElementById('top-card');
+const bNext   = document.getElementById('b-next');
+const bBack   = document.getElementById('b-back');
+const countEl = document.getElementById('count');
+const dotsEl  = document.getElementById('dots');
+const hintEl  = document.getElementById('hint');
+
+let current = 0;
+let busy    = false;
+const REST  = 'rotate(-4deg)'; // fixed resting position — never changes
+
+// build dots once
+CARDS.forEach((_, i) => {
+  const d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' on' : '');
+  dotsEl.appendChild(d);
+});
+
+function fill(idx) {
+  const c = CARDS[idx];
+  document.getElementById('c-num').textContent    = c.num;
+  document.getElementById('c-tag').textContent    = c.tag;
+  document.getElementById('c-title').innerHTML    = c.title;
+  document.getElementById('c-quote').textContent  = c.quote;
+  document.getElementById('c-bridge').textContent = c.bridge;
+  document.getElementById('c-action').textContent = c.action;
+  card.scrollTop = 0;
+}
+
+function meta() {
+  countEl.textContent = (current + 1) + ' / ' + CARDS.length;
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('on', i === current));
+  if (current > 0) hintEl.style.opacity = '0';
+}
+
+function transition(nextIdx, goingBack) {
+  if (busy) return;
+  busy = true;
+  card.style.pointerEvents = 'none';
+
+  // exit: slide off right, rotation never changes
+  card.style.transition = 'transform .28s cubic-bezier(.4,0,.2,1), opacity .28s';
+  card.style.transform  = 'translateX(140%) rotate(-4deg)';
+  card.style.opacity    = '0';
+
+  setTimeout(() => {
+    current = nextIdx;
+    fill(current);
+    meta();
+    card.style.opacity = '1';
+
+    if (goingBack) {
+      // previous card slides in from the right, same tilt the whole time
+      card.style.transition = 'none';
+      card.style.transform  = 'translateX(110%) rotate(-4deg)';
+      card.offsetHeight;
+      card.style.transition = 'transform .3s cubic-bezier(.4,0,.2,1)';
+      card.style.transform  = REST;
+      setTimeout(() => { card.style.pointerEvents = ''; busy = false; }, 300);
+    } else {
+      // next card was already in the pile — just appear, no animation
+      card.style.transition = 'none';
+      card.style.transform  = REST;
+      card.style.pointerEvents = '';
+      busy = false;
+    }
+  }, 260);
+}
+
+function goForward() {
+  if (current < CARDS.length - 1) transition(current + 1, false);
+}
+function goBack() {
+  if (current > 0) transition(current - 1, true); // goingBack=true → slide in from right
+}
+
+// ── drag / swipe ──
+let startX = 0, dx = 0, dragging = false;
+
+card.addEventListener('mousedown', e => {
+  if (busy) return;
+  startX = e.clientX; dx = 0; dragging = true;
+  card.style.transition = 'none';
+});
+window.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  dx = e.clientX - startX;
+  card.style.transform = 'translateX(' + dx + 'px) rotate(-4deg)';
+  const s = Math.min(Math.abs(dx) / 80, 1);
+  bNext.style.opacity = dx >  20 ? s : 0;
+  bBack.style.opacity = dx < -20 ? s : 0;
+});
+window.addEventListener('mouseup', () => {
+  if (!dragging) return;
+  dragging = false;
+  bNext.style.opacity = bBack.style.opacity = 0;
+  if      (dx >  80) goForward();
+  else if (dx < -80) goBack();
+  else { card.style.transition = 'transform .35s cubic-bezier(.34,1.56,.64,1)'; card.style.transform = REST; }
+});
+
+card.addEventListener('touchstart', e => {
+  if (busy) return;
+  startX = e.touches[0].clientX; dx = 0; dragging = true;
+  card.style.transition = 'none';
+}, { passive: true });
+card.addEventListener('touchmove', e => {
+  if (!dragging) return;
+  dx = e.touches[0].clientX - startX;
+  card.style.transform = 'translateX(' + dx + 'px) rotate(-4deg)';
+  const s = Math.min(Math.abs(dx) / 80, 1);
+  bNext.style.opacity = dx >  20 ? s : 0;
+  bBack.style.opacity = dx < -20 ? s : 0;
+}, { passive: true });
+card.addEventListener('touchend', () => {
+  if (!dragging) return;
+  dragging = false;
+  bNext.style.opacity = bBack.style.opacity = 0;
+  if      (dx >  80) goForward();
+  else if (dx < -80) goBack();
+  else { card.style.transition = 'transform .4s cubic-bezier(.34,1.56,.64,1)'; card.style.transform = REST; }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') goForward();
+  if (e.key === 'ArrowLeft')  goBack();
+});
+
+// init
+card.style.transform = REST;
+fill(0);
+meta();
+</script>
+
+</body>
+</html>

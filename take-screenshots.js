@@ -7,7 +7,7 @@
 const { chromium } = require('playwright');
 const path = require('path');
 
-const HTML_FILE = path.resolve(__dirname, 'library/playbooks/2026-04-09-spacex-pm-playbook.html');
+const HTML_FILE = path.resolve(__dirname, 'library/notes/2026-04-09-spacex-pm-playbook.html');
 const OUT_DIR   = path.resolve(__dirname, 'screenshots');
 const FILE_URL  = `file://${HTML_FILE}`;
 

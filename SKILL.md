@@ -156,7 +156,7 @@ Then read the full stdout (transcript + analysis block) and generate the role-sp
 
 ## Generating the HTML playbook
 
-After generating the recap, offer to build an editorial HTML page. The reference design is the SpaceX PM Playbook at `~/Claude/podcast-recap/library/playbooks/2026-04-09-spacex-pm-playbook.html`.
+After generating the recap, offer to build an editorial HTML page. The reference design is the SpaceX PM Playbook at `~/Claude/podcast-recap/library/notes/2026-04-09-spacex-pm-playbook.html`.
 
 **Design spec:**
 - **Layout:** Single-scroll page, no pagination
@@ -179,7 +179,7 @@ The HTML structure is persona-agnostic — only the bridge labels and framing ch
 
 Every time an HTML playbook is generated, Claude must:
 
-1. **Save the HTML** to `~/Claude/podcast-recap/library/playbooks/YYYY-MM-DD-[slug].html`
+1. **Save the HTML** to `~/Claude/podcast-recap/library/notes/YYYY-MM-DD-[slug].html`
    - Slug = lowercase title, spaces → hyphens, special chars stripped
    - Example: `2026-04-10-spacex-pm-playbook.html`
 
@@ -193,13 +193,13 @@ Every time an HTML playbook is generated, Claude must:
      "date": "YYYY-MM-DD",
      "emoji": "[pick one relevant emoji]",
      "lessonCount": [number of lesson sections],
-     "filename": "playbooks/YYYY-MM-DD-[slug].html"
+     "filename": "notes/YYYY-MM-DD-[slug].html"
    }
    ```
 
 3. **Commit and push both files** to GitHub:
    ```bash
-   git -C ~/Claude/podcast-recap add library/playbooks/YYYY-MM-DD-[slug].html library/manifest.json
+   git -C ~/Claude/podcast-recap add library/notes/YYYY-MM-DD-[slug].html library/manifest.json
    git -C ~/Claude/podcast-recap commit -m "Add playbook: [title]"
    git -C ~/Claude/podcast-recap push origin main
    ```

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcard Mockup — SpaceX PM Playbook</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #FAF7F2;
+      --bg-quote:     #F5EDDF;
+      --text:         #1C1A18;
+      --text-mid:     #5C5550;
+      --text-muted:   #9C918A;
+      --amber:        #D97706;
+      --amber-light:  #FEF3C7;
+      --amber-deep:   #B45309;
+      --border:       #E5DDD2;
+      --card-bg:      #FEFCF8;
+      --card-back:    #1C1A18;
+      --font-display: 'Bricolage Grotesque', Georgia, serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem 5rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HEADER ── */
+    .deck-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .deck-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 0.75rem;
+    }
+
+    .deck-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 4vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .deck-title em { font-style: normal; color: var(--amber); }
+
+    .deck-sub {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* ── PROGRESS ── */
+    .progress-bar {
+      width: 100%;
+      max-width: 480px;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      margin-bottom: 2.5rem;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--amber);
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+
+    /* ── CARD STAGE ── */
+    .card-stage {
+      width: 100%;
+      max-width: 480px;
+      perspective: 1200px;
+      cursor: pointer;
+      margin-bottom: 2rem;
+    }
+
+    /* ── CARD FLIPPER ── */
+    .card-flipper {
+      width: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-stage.flipped .card-flipper {
+      transform: rotateY(180deg);
+    }
+
+    /* shared face styles */
+    .card-front,
+    .card-back {
+      width: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 16px;
+      padding: 2.5rem 2.25rem;
+    }
+
+    /* ── FRONT ── */
+    .card-front {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+      /* position in stacking context — back needs absolute */
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-back {
+      position: absolute;
+      top: 0; left: 0;
+      min-height: 340px;
+      background: var(--card-back);
+      transform: rotateY(180deg);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* front content */
+    .card-num {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--amber);
+      opacity: 0.12;
+      user-select: none;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-theme-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 0.6rem;
+    }
+
+    .card-theme-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      margin-bottom: 2rem;
+    }
+
+    .card-quote-bar {
+      border-left: 3px solid var(--amber);
+      background: var(--bg-quote);
+      border-radius: 0 8px 8px 0;
+      padding: 1rem 1.25rem;
+    }
+
+    .card-quote-text {
+      font-family: var(--font-display);
+      font-size: 0.92rem;
+      font-style: italic;
+      line-height: 1.6;
+      color: var(--text-mid);
+    }
+
+    .card-front-hint {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .card-front-hint svg { opacity: 0.5; }
+
+    /* back content */
+    .card-back-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-back-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .card-back-section:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .card-bridge {
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: #C4B5A5;
+    }
+
+    .card-bridge strong {
+      color: #F0E6D8;
+      font-weight: 600;
+    }
+
+    .card-action-box {
+      background: rgba(217, 119, 6, 0.15);
+      border: 1px solid rgba(217, 119, 6, 0.3);
+      border-radius: 8px;
+      padding: 0.9rem 1.1rem;
+    }
+
+    .card-action-text {
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: #F5E4C8;
+    }
+
+    .card-back-hint {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.75rem;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── CONTROLS ── */
+    .card-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .ctrl-btn {
+      flex: 1;
+      height: 44px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      border-radius: 10px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-mid);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    .ctrl-btn:hover {
+      background: #F5EDDF;
+      border-color: var(--amber);
+      color: var(--amber-deep);
+    }
+
+    .ctrl-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .ctrl-btn.primary {
+      background: var(--amber-deep);
+      border-color: var(--amber-deep);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .ctrl-btn.primary:hover {
+      background: #92400e;
+      border-color: #92400e;
+      color: #fff;
+    }
+
+    /* ── KEYBOARD HINT ── */
+    .keyboard-hint {
+      margin-top: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    kbd {
+      display: inline-block;
+      background: var(--border);
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      margin: 0 0.1rem;
+    }
+
+    /* ── MOCKUP TAG ── */
+    .mockup-label {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--text);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      pointer-events: none;
+    }
+
+    /* ── ENTERING ANIMATION ── */
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(16px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .card-stage {
+      animation: cardIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+    }
+  </style>
+</head>
+<body>
+
+<header class="deck-header">
+  <p class="deck-eyebrow">SpaceX × PM</p>
+  <h1 class="deck-title">7 lessons.<br><em>One at a time.</em></h1>
+  <p class="deck-sub">Tap to reveal · Arrow keys to navigate</p>
+</header>
+
+<div class="progress-bar">
+  <div class="progress-fill" id="progress" style="width: 14.28%"></div>
+</div>
+
+<!-- CARD -->
+<div class="card-stage" id="card" role="button" aria-label="Flip card" tabindex="0">
+  <div class="card-flipper" id="flipper">
+
+    <!-- FRONT -->
+    <div class="card-front">
+      <div>
+        <div class="card-num" id="card-num">01</div>
+        <div class="card-theme-label" id="card-label">On Cost</div>
+        <h2 class="card-theme-title" id="card-title">Ideas are cheap.<br>Shipping is expensive.</h2>
+        <div class="card-quote-bar">
+          <p class="card-quote-text" id="card-quote">It turned out that the materials cost of a rocket was around 2% of the typical price. 98 cents of every dollar was going somewhere other than what it was made of.</p>
+        </div>
+      </div>
+      <div class="card-front-hint">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 15l5 5 5-5M7 9l5-5 5 5"/></svg>
+        Tap to see the PM translation
+      </div>
+    </div>
+
+    <!-- BACK -->
+    <div class="card-back">
+      <div>
+        <div class="card-back-section">
+          <div class="card-back-label">The PM Translation</div>
+          <p class="card-bridge" id="card-bridge">In product, the equivalent of "atoms" is ideas — they're essentially free. The expensive part is <strong>engineering time, coordination, context-switching, and review cycles</strong>. A PM who generates 100 ideas but can't ruthlessly prioritize is doing exactly what traditional aerospace did: adding cost at every layer with no accountability.</p>
+        </div>
+        <div class="card-action-box">
+          <div class="card-back-label" style="color:#F5A623;margin-bottom:0.3rem">In Practice</div>
+          <p class="card-action-text" id="card-action">Run an "idiot index" on your roadmap. For every feature: what's the ratio of eng weeks to actual user value? High ratio = you're adding overhead. The most over-engineered features are usually ones nobody questioned because a smart stakeholder asked for them.</p>
+        </div>
+      </div>
+      <div class="card-back-hint">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Arrow right for next card
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CONTROLS -->
+<div class="card-controls">
+  <button class="ctrl-btn" id="btn-prev" disabled>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+    Prev
+  </button>
+  <button class="ctrl-btn primary" id="btn-flip">
+    Flip card
+  </button>
+  <button class="ctrl-btn" id="btn-next">
+    Next
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<p class="keyboard-hint"><kbd>Space</kbd> flip &nbsp;·&nbsp; <kbd>←</kbd><kbd>→</kbd> navigate</p>
+
+<div class="mockup-label">Flashcard Mockup</div>
+
+<script>
+  const cards = [
+    {
+      num: "01",
+      label: "On Cost",
+      title: "Ideas are cheap.<br>Shipping is expensive.",
+      quote: "It turned out that the materials cost of a rocket was around 2% of the typical price. 98 cents of every dollar was going somewhere other than what it was made of.",
+      bridge: 'In product, the equivalent of "atoms" is ideas — they\'re essentially free. The expensive part is <strong>engineering time, coordination, context-switching, and review cycles</strong>. A PM who generates 100 ideas but can\'t ruthlessly prioritize adds cost at every layer with no accountability.',
+      action: "Run an \"idiot index\" on your roadmap. For every feature: what's the ratio of eng weeks to actual user value? High ratio = you're adding overhead. The most over-engineered features are usually ones nobody questioned because a smart stakeholder asked for them."
+    },
+    {
+      num: "02",
+      label: "On Requirements",
+      title: "The best feature<br>is no feature.",
+      quote: "\"The best part is no part. The best process is no process.\" If you are not adding back at least 10% of the requirements you deleted, you aren't deleting enough.",
+      bridge: 'PMs inherit requirements from executives, customers, legal, and "how we\'ve always done it." SpaceX\'s rule: <strong>every requirement must have an owner who can defend why it still exists.</strong> Requirements from "smart people" are the most dangerous — nobody thinks to question them.',
+      action: "At your next sprint planning, pick one requirement that's been on the list for months and ask: who owns this? Can they defend it in 60 seconds? If not, put it in a \"delete pending\" column for two weeks and see if anyone notices it's missing."
+    },
+    {
+      num: "03",
+      label: "On Validation",
+      title: "Move until reality<br>corrects you.",
+      quote: "SpaceX decided early that they were going to learn by doing rather than planning to perfection. Mistakes were acceptable as long as you learned from them fast.",
+      bridge: 'The PM equivalent of "rapid iteration" is easy to say and hard to mean. Most product teams iterate on mockups, not shipped code. <strong>Real feedback loops require putting something in front of users before you think it\'s ready.</strong> The discomfort of that is the point.',
+      action: "Find one thing on your roadmap you're planning to spec for another 2 sprints. Ship a version now — even a half-baked one — and treat the resulting user feedback as your actual spec."
+    },
+    {
+      num: "04",
+      label: "On Cadence",
+      title: "Velocity beats<br>perfection.",
+      quote: "The Falcon 9 exploded. The Falcon Heavy exploded. Starship has exploded many times. Each explosion was a data point that moved them forward faster than simulations could.",
+      bridge: 'In product, a failed launch is usually a delayed launch, a scoped-down launch, or a launch that never happens. <strong>SpaceX normalized failure as a feature, not a bug.</strong> Your stakeholders will resist this — your job is to make the case that a shipped 70% is worth more than a delayed 100%.',
+      action: "Before your next launch, write down what \"fast enough to learn\" looks like vs. what \"stakeholder-approved perfect\" looks like. If the gap is more than 2 sprints, push back on the scope."
+    },
+    {
+      num: "05",
+      label: "On Focus",
+      title: "Bet on the constraint<br>that matters most.",
+      quote: "Musk kept coming back to: what is the actual critical path here? Not the list of things that need to happen, but the one thing that, if removed, makes everything else impossible.",
+      bridge: 'Most roadmaps are lists of things that should happen. Very few identify the one constraint that makes everything else possible. <strong>Finding the critical path is a PM superpower</strong> — it\'s the difference between a team that moves and a team that\'s always busy.',
+      action: "In your next planning meeting, ask: \"What's the one thing on this list that, if delayed, makes every other item irrelevant?\" Don't let the team leave until there's a clear answer. That's your P0."
+    },
+    {
+      num: "06",
+      label: "On Vision",
+      title: "A mission that makes<br>the tradeoffs obvious.",
+      quote: "When the goal is \"make humanity multiplanetary,\" the resource allocation decisions get a lot easier. Almost everything is justified. Almost nothing is a distraction.",
+      bridge: 'Vague missions ("be the best platform for X") force endless debate on every tradeoff. <strong>A sharp mission acts as a filter</strong> — it rules things in and out before anyone has to argue about them. Most product teams are debating things that a clearer mission statement would have already decided.',
+      action: "Write your team's actual operating mission in one sentence — not the company mission, your team's. If it doesn't immediately help you decide between two competing priorities, it's not specific enough. Try again."
+    },
+    {
+      num: "07",
+      label: "On Systems",
+      title: "Build the machine<br>that builds the thing.",
+      quote: "What SpaceX actually got good at wasn't rockets — it was the organizational system that could iterate rockets faster than anyone thought possible.",
+      bridge: 'The PM equivalent: your job isn\'t just to ship features. <strong>It\'s to build the process that lets your team ship better features faster.</strong> If every sprint feels like starting from scratch, you\'re building products but not building a machine.',
+      action: "Audit one recurring friction point in your team's process (estimation debt, unresolved dependencies, unclear definition of done). Pick just one. This sprint, fix the process, not just the symptom."
+    }
+  ];
+
+  let current = 0;
+  let flipped = false;
+
+  const cardEl = document.getElementById('card');
+  const progress = document.getElementById('progress');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnFlip = document.getElementById('btn-flip');
+  const btnNext = document.getElementById('btn-next');
+
+  function render(index, animate) {
+    const c = cards[index];
+    document.getElementById('card-num').textContent = c.num;
+    document.getElementById('card-label').textContent = c.label;
+    document.getElementById('card-title').innerHTML = c.title;
+    document.getElementById('card-quote').textContent = c.quote;
+    document.getElementById('card-bridge').innerHTML = c.bridge;
+    document.getElementById('card-action').textContent = c.action;
+
+    progress.style.width = ((index + 1) / cards.length * 100) + '%';
+    btnPrev.disabled = index === 0;
+    btnNext.disabled = index === cards.length - 1;
+
+    if (animate) {
+      cardEl.style.animation = 'none';
+      cardEl.offsetHeight; // reflow
+      cardEl.style.animation = 'cardIn 0.35s cubic-bezier(0.4, 0, 0.2, 1) both';
+    }
+  }
+
+  function flipCard() {
+    flipped = !flipped;
+    cardEl.classList.toggle('flipped', flipped);
+    btnFlip.textContent = flipped ? 'Unflip' : 'Flip card';
+  }
+
+  function goNext() {
+    if (current < cards.length - 1) {
+      if (flipped) { flipped = false; cardEl.classList.remove('flipped'); btnFlip.textContent = 'Flip card'; }
+      current++;
+      render(current, true);
+    }
+  }
+
+  function goPrev() {
+    if (current > 0) {
+      if (flipped) { flipped = false; cardEl.classList.remove('flipped'); btnFlip.textContent = 'Flip card'; }
+      current--;
+      render(current, true);
+    }
+  }
+
+  cardEl.addEventListener('click', flipCard);
+  cardEl.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flipCard(); } });
+  btnFlip.addEventListener('click', e => { e.stopPropagation(); flipCard(); });
+  btnPrev.addEventListener('click', e => { e.stopPropagation(); goPrev(); });
+  btnNext.addEventListener('click', e => { e.stopPropagation(); goNext(); });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') goNext();
+    if (e.key === 'ArrowLeft')  goPrev();
+    if (e.key === ' ') { e.preventDefault(); flipCard(); }
+  });
+
+  render(0, false);
+</script>
+
+</body>
+</html>
