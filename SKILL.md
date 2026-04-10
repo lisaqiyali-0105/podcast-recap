@@ -1,11 +1,11 @@
 ---
 name: podcast-recap
-description: Transcribe any podcast episode or YouTube video locally using Whisper — no API key, no cost. Accepts YouTube URLs, RSS feed + episode GUID, direct audio URLs, or local mp3 files. Generates role-specific HTML playbooks with pull quotes, PM/role translation, and a Quill reflections editor.
+description: Transcribe any podcast episode or YouTube video locally using Whisper — no API key, no cost. Accepts YouTube URLs, RSS feed + episode GUID, direct audio URLs, or local mp3 files. Generates role-specific HTML notes with pull quotes, PM/role translation, and a Quill reflections editor.
 ---
 
 # Podcast Recap
 
-Transcribe any audio locally using mlx-whisper (Apple Silicon GPU) or faster-whisper (CPU fallback), then generate a role-specific HTML playbook. Free, private, no API key needed.
+Transcribe any audio locally using mlx-whisper (Apple Silicon GPU) or faster-whisper (CPU fallback), then generate a role-specific HTML note. Free, private, no API key needed.
 
 ## Trigger phrases
 - "transcribe [YouTube URL]"
@@ -152,11 +152,11 @@ Always confirm the file was saved and show the user:
 - Word count
 - First 3–4 sentences of the transcript so they can verify accuracy
 
-Then read the full stdout (transcript + analysis block) and generate the role-specific recap. Ask: "Want me to turn this into an HTML playbook?"
+Then read the full stdout (transcript + analysis block) and generate the role-specific recap. Ask: "Want me to turn this into an HTML note?"
 
-## Generating the HTML playbook
+## Generating the HTML note
 
-After generating the recap, offer to build an editorial HTML page. The reference design is the SpaceX PM Playbook at `~/Claude/podcast-recap/library/notes/2026-04-09-spacex-pm-playbook.html`.
+After generating the recap, offer to build an editorial HTML page. The reference design is at `~/Claude/podcast-recap/library/notes/2026-04-09-spacex-pm-playbook.html`.
 
 **Design spec:**
 - **Layout:** Single-scroll page, no pagination
@@ -177,7 +177,7 @@ The HTML structure is persona-agnostic — only the bridge labels and framing ch
 
 ## Auto-saving to the library (MANDATORY)
 
-Every time an HTML playbook is generated, Claude must:
+Every time an HTML note is generated, Claude must:
 
 1. **Save the HTML** to `~/Claude/podcast-recap/library/notes/YYYY-MM-DD-[slug].html`
    - Slug = lowercase title, spaces → hyphens, special chars stripped
@@ -200,7 +200,7 @@ Every time an HTML playbook is generated, Claude must:
 3. **Commit and push both files** to GitHub:
    ```bash
    git -C ~/Claude/podcast-recap add library/notes/YYYY-MM-DD-[slug].html library/manifest.json
-   git -C ~/Claude/podcast-recap commit -m "Add playbook: [title]"
+   git -C ~/Claude/podcast-recap commit -m "Add note: [title]"
    git -C ~/Claude/podcast-recap push origin main
    ```
 

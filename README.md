@@ -1,6 +1,6 @@
 # podcast-recap
 
-**Turn any podcast into a personalized knowledge playbook — built for how you actually learn, not how you wish you did.**
+**Turn any podcast into a personalized knowledge note — built for how you actually learn, not how you wish you did.**
 
 ---
 
@@ -28,9 +28,11 @@ The workflow is designed around how your memory actually works, not around ideal
 
 **Step 3 — Run podcast-recap.** The tool transcribes the full episode locally (no API key, runs on your machine), then generates a role-specific analysis connecting the podcast's big ideas to your actual work. A translation, not a summary.
 
-**Step 4 — Review the playbook.** You get a beautiful HTML document with pull quotes, your role-specific bridge between the podcast's ideas and your job, and a "try this" section for each theme. Your notes are woven in; the analysis references what you flagged.
+**Step 4 — Review the note.** You get a beautiful HTML document with pull quotes, your role-specific bridge between the podcast's ideas and your job, and a "try this" section for each theme. Your notes are woven in; the analysis references what you flagged.
 
-**Step 5 — Revisit on a schedule.** *(Coming soon: cron job integration.)* A spaced repetition system resurfaces your past recaps at the right intervals to move knowledge from short-term memory into long-term retention. The goal is to read it multiple times, not once, so it actually changes how you work.
+**Step 5 — Browse your library.** Every note is automatically saved to `library/` and appears in your personal notebook at `https://[your-username].github.io/podcast-recap/library/`. Filter by persona, search by source, see everything you've captured in one place.
+
+**Step 6 — Revisit on a schedule.** *(Coming soon: cron job integration.)* A spaced repetition system resurfaces past notes at the right intervals to move knowledge from short-term memory into long-term retention. The goal is to read it multiple times, not once, so it actually changes how you work.
 
 ---
 
@@ -166,11 +168,11 @@ Common roles have custom labels built in (e.g., `founder` → "The Founder Lens 
 
 ## Example output
 
-[**Browse the Playbook Library →**](library/) — all generated playbooks in one place, with search, persona filters, and dark/light mode.
+[**Browse the Note Library →**](library/) — all generated notes in one place, with search, persona filters, and dark/light mode.
 
-[**View the SpaceX PM Playbook**](library/notes/2026-04-09-spacex-pm-playbook.html) — a full recap generated from "Atoms Are Cheap, Process Is Pricey" by Max Olson, analyzed through the lens of a product manager.
+[**View the SpaceX PM Note**](library/notes/2026-04-09-spacex-pm-playbook.html) — a full recap generated from "Atoms Are Cheap, Process Is Pricey" by Max Olson, analyzed through the lens of a product manager.
 
-Open locally: `open library/index.html`
+> **Note:** The library uses `fetch()` to load the manifest, so it requires a server — it won't work if you double-click the file. Run `python3 -m http.server 8765 --directory library` and open `http://localhost:8765` to browse locally, or use the GitHub Pages URL.
 
 ![Hero section showing the title and source citation](screenshots/1-hero.png)
 
@@ -178,7 +180,7 @@ Open locally: `open library/index.html`
 
 ![Reflections section with the Quill rich-text editor](screenshots/3-reflections.png)
 
-The output includes:
+Each note includes:
 - Pull quotes from the source
 - Role-specific translation of each big idea
 - A concrete "In Practice" action per theme
@@ -208,7 +210,14 @@ cp SKILL.md ~/.claude/skills/podcast-recap/SKILL.md
 cp transcribe.py ~/.claude/skills/podcast-recap/transcribe.py
 ```
 
-Then open `SKILL.md` and update the script path to wherever you placed `transcribe.py`.
+**Set up the note library** (one-time):
+
+```bash
+# Fork or clone this repo so Claude has somewhere to save notes
+git clone https://github.com/[your-username]/podcast-recap ~/Claude/podcast-recap
+```
+
+Then enable GitHub Pages on the `library/` folder in your repo settings. Every note Claude generates will be auto-committed and pushed — your library at `https://[your-username].github.io/podcast-recap/library/` stays up to date automatically.
 
 Once installed, trigger it in Claude Code with:
 - "Lenny's podcast, Amol Anthropic head of growth, for a PM" — no URL needed, Claude finds it
@@ -221,7 +230,7 @@ Once installed, trigger it in Claude Code with:
 ## Roadmap
 
 - [ ] **Spaced repetition** — cron job that resurfaces past recaps on a configurable schedule (daily / weekly / monthly). The goal is building recall, not just capturing.
-- [ ] **Telegram bot integration** — send a voice message to your Telegram bot right after listening; it kicks off the recap automatically and delivers the HTML playbook to you.
+- [ ] **Telegram bot integration** — send a voice message to your Telegram bot right after listening; it kicks off the recap automatically and delivers the HTML note to you.
 - [ ] **Context memory** — remember your role, context, and preferences across sessions so you don't have to re-specify them every time.
 - [ ] **Multi-format export** — Obsidian markdown, Notion page, email digest.
 
