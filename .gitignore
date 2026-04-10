@@ -1,0 +1,19 @@
+# Transcripts (may contain personal content)
+transcripts/
+*.transcript.txt
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# Whisper model cache (large, downloaded on first run)
+~/.cache/huggingface/
+
+# Node (screenshot tooling)
+node_modules/

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mockup B — Sticky Header</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #F7F3EC;   /* richer parchment — less clinical */
+      --bg-alt:       #EFE8DC;   /* deeper warm tone for alternating sections */
+      --bg-quote:     #EDE0CC;   /* more contrast on pull quote */
+      --text:         #18160F;   /* deeper near-black — more ink-like */
+      --text-mid:     #4A4139;   /* darker mid — better contrast on warm bg */
+      --text-muted:   #8C7E74;
+      --amber:        #C96A00;   /* richer burnt orange — more print-like than yellow */
+      --amber-light:  #FDE9C0;
+      --amber-deep:   #A05000;
+      --rust:         #C1440E;   /* second accent — editorial terracotta, used sparingly */
+      --border:       #DDD0BF;   /* slightly deeper border for more definition */
+      --font-display: 'Bricolage Grotesque', Georgia, serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+      --header-h:     52px;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── STICKY HEADER ── */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: rgba(247, 243, 236, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+      gap: 2rem;
+    }
+
+    .header-title {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .header-title span {
+      color: var(--amber);
+    }
+
+    .header-divider {
+      width: 1px;
+      height: 16px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      flex: 1;
+    }
+
+    .header-nav::-webkit-scrollbar { display: none; }
+
+    .header-nav a {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      white-space: nowrap;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .header-nav a:hover {
+      color: var(--text);
+      background: rgba(0,0,0,0.05);
+    }
+
+    .header-nav a.active {
+      color: var(--amber-deep);
+      font-weight: 500;
+    }
+
+    /* ── LAYOUT ── */
+    .content {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      padding-top: var(--header-h);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 6rem 0 5rem;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 em { font-style: normal; color: var(--amber); }
+
+    .hero-intro {
+      font-size: 1.15rem;
+      line-height: 1.75;
+      color: var(--text-mid);
+      max-width: 560px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-source {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-source-line { width: 2rem; height: 1px; background: var(--border); }
+
+    .hero-source-text {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* ── LESSON ── */
+    .lesson {
+      padding: 5rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* alternating warm background on even lessons */
+    .lesson:nth-child(even) {
+      background: var(--bg-alt);
+      margin: 0 -2rem;
+      padding: 5rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lesson-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .lesson-number {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--amber);
+      opacity: 0.22;   /* more visible — gives the layout more character */
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .lesson-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 0.4rem;
+      padding-top: 0.5rem;
+    }
+
+    .lesson-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+
+    /* ── PULL QUOTE — Option B ── */
+    .pull-quote {
+      border-left: 4px solid var(--amber);
+      background: var(--bg-quote);
+      border-radius: 0 12px 12px 0;
+      padding: 2rem 2.5rem;
+      margin: 2.5rem 0;
+      position: relative;
+    }
+
+    /* large decorative open-quote mark */
+    .pull-quote::before {
+      content: '\201C';
+      position: absolute;
+      top: -0.5rem;
+      left: 1.25rem;
+      font-family: var(--font-display);
+      font-size: 5rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--amber);
+      opacity: 0.18;
+      pointer-events: none;
+    }
+
+    .pull-quote-text {
+      font-family: var(--font-display);
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
+      font-weight: 500;
+      line-height: 1.65;
+      font-style: italic;
+      color: var(--text);
+    }
+
+    .pull-quote-source {
+      margin-top: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      color: var(--amber-deep);
+      text-transform: uppercase;
+    }
+
+    /* ── PM BRIDGE ── */
+    .pm-bridge {
+      display: grid;
+      grid-template-columns: 3px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin: 2rem 0;
+    }
+
+    .pm-bridge-line {
+      width: 3px;
+      background: var(--amber);
+      border-radius: 2px;
+      align-self: stretch;
+    }
+
+    .pm-bridge-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber-deep);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .pm-bridge-text {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--text);
+      max-width: 64ch;
+    }
+
+    /* ── IN PRACTICE ── */
+    .in-practice {
+      background: var(--amber-light);
+      border: 1px solid #FDE68A;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin-top: 1.75rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: start;
+    }
+
+    .in-practice-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber-deep);
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .in-practice-text {
+      font-size: 0.9rem;
+      color: #78350F;
+      line-height: 1.65;
+    }
+
+    .mockup-label {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--text);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- STICKY HEADER -->
+<header class="site-header">
+  <span class="header-title">SpaceX × <span>PM</span></span>
+  <div class="header-divider"></div>
+  <nav class="header-nav" aria-label="Lessons">
+    <a href="#overview" class="active">Overview</a>
+    <a href="#lesson-1">01 Cost</a>
+    <a href="#lesson-2">02 Requirements</a>
+    <a href="#lesson-3">03 Validation</a>
+    <a href="#lesson-4">04 Cadence</a>
+    <a href="#lesson-5">05 Focus</a>
+    <a href="#lesson-6">06 Vision</a>
+    <a href="#lesson-7">07 Systems</a>
+    <a href="#reflect">Reflect</a>
+  </nav>
+</header>
+
+<div class="content">
+
+  <!-- HERO -->
+  <section class="hero" id="overview">
+    <p class="hero-eyebrow">Podcast Recap · For Product Managers</p>
+    <h1>7 lessons <em>SpaceX</em><br>taught me about<br>product.</h1>
+    <p class="hero-intro">SpaceX's playbook runs on feedback loops, first principles, and shipping fast enough that reality corrects you before you waste years on the wrong thing.</p>
+    <div class="hero-source">
+      <div class="hero-source-line"></div>
+      <span class="hero-source-text">Source: "Atoms Are Cheap, Process Is Pricey" — Max Olson</span>
+    </div>
+  </section>
+
+  <!-- LESSON 1 -->
+  <article class="lesson" id="lesson-1">
+    <div class="lesson-header">
+      <div class="lesson-number">01</div>
+      <div>
+        <div class="lesson-label">On Cost</div>
+        <h2 class="lesson-title">Ideas are cheap.<br>Shipping is expensive.</h2>
+      </div>
+    </div>
+
+    <div class="pull-quote">
+      <p class="pull-quote-text">It turned out that the materials cost of a rocket was around 2% of the typical price. 98 cents of every dollar was going somewhere other than what it was made of — supplier markup stacking through contract layers, custom designs that couldn't achieve manufacturing scale, and expendable hardware thrown away after every flight.</p>
+      <p class="pull-quote-source">Max Olson on SpaceX's first principles analysis</p>
+    </div>
+
+    <div class="pm-bridge">
+      <div class="pm-bridge-line"></div>
+      <div>
+        <div class="pm-bridge-label">The PM Translation</div>
+        <p class="pm-bridge-text">In product, the equivalent of "atoms" is ideas — they're essentially free. The expensive part is <strong>engineering time, coordination, context-switching, and review cycles</strong>. A PM who generates 100 ideas but can't ruthlessly prioritize is doing exactly what traditional aerospace did: adding cost at every layer with no accountability.</p>
+      </div>
+    </div>
+
+    <div class="in-practice">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-top:2px;flex-shrink:0"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <div>
+        <div class="in-practice-label">In Practice</div>
+        <p class="in-practice-text">Run an "idiot index" on your roadmap. For every feature, ask: what's the ratio of eng weeks spent to actual user value delivered? High ratio = you're being an idiot. The most over-engineered features are usually the ones nobody questioned because a smart stakeholder asked for them.</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- LESSON 2 -->
+  <article class="lesson" id="lesson-2">
+    <div class="lesson-header">
+      <div class="lesson-number">02</div>
+      <div>
+        <div class="lesson-label">On Requirements</div>
+        <h2 class="lesson-title">The best feature<br>is no feature.</h2>
+      </div>
+    </div>
+
+    <div class="pull-quote">
+      <p class="pull-quote-text">"The best part is no part. The best process is no process." If you are not adding back at least 10% of the requirements you deleted, you aren't deleting enough.</p>
+      <p class="pull-quote-source">Elon Musk</p>
+    </div>
+
+    <div class="pm-bridge">
+      <div class="pm-bridge-line"></div>
+      <div>
+        <div class="pm-bridge-label">The PM Translation</div>
+        <p class="pm-bridge-text">PMs inherit requirements from executives, customers, legal, and "how we've always done it." SpaceX's rule: <strong>every requirement must have an owner who can defend why it still exists.</strong> The requirements from "smart people" are the most dangerous — because nobody thinks to question them.</p>
+      </div>
+    </div>
+
+    <div class="in-practice">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-top:2px;flex-shrink:0"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <div>
+        <div class="in-practice-label">In Practice</div>
+        <p class="in-practice-text">At your next sprint planning, pick one requirement that's been on the list for months and ask: who owns this? Can they defend it in 60 seconds? If not, put it in a "delete pending" column for two weeks and see if anyone notices it's missing.</p>
+      </div>
+    </div>
+  </article>
+
+  <p style="text-align:center; padding: 4rem 0; color: var(--text-muted); font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase;">Lessons 3–7 + Reflections continue below ↓</p>
+
+</div>
+
+<div class="mockup-label">Option B — Sticky Header</div>
+
+<script>
+  // Highlight active nav item based on scroll position
+  const sections = document.querySelectorAll('[id]');
+  const navLinks = document.querySelectorAll('.header-nav a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.header-nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

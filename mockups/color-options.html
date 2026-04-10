@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Color Options</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #E8E3DB;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #666;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .card {
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    }
+
+    /* ── SHARED CARD STRUCTURE ── */
+    .card-header {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      padding: 0 1.25rem;
+      gap: 1rem;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .card-header-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(0,0,0,0.4);
+      flex-shrink: 0;
+    }
+
+    .progress {
+      height: 2px;
+      border-radius: 2px;
+      width: 45%;
+      flex-shrink: 0;
+    }
+
+    .nav-dots {
+      display: flex;
+      gap: 0.3rem;
+      flex: 1;
+    }
+
+    .nav-dot {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.65rem;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      color: rgba(0,0,0,0.35);
+      white-space: nowrap;
+    }
+
+    .nav-dot.active {
+      font-weight: 500;
+    }
+
+    .card-body {
+      padding: 1.75rem 1.75rem 1.5rem;
+      background: #F7F3EC;
+    }
+
+    .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.9rem;
+    }
+
+    .heading {
+      font-family: 'Bricolage Grotesque', serif;
+      font-size: 1.85rem;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: #18160F;
+      margin-bottom: 0.75rem;
+    }
+
+    .heading em { font-style: normal; }
+
+    .subtext {
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: #4A4139;
+      margin-bottom: 1.25rem;
+      max-width: 36ch;
+    }
+
+    .quote-block {
+      border-left-width: 3px;
+      border-left-style: solid;
+      border-radius: 0 8px 8px 0;
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .quote-text {
+      font-family: 'Bricolage Grotesque', serif;
+      font-size: 0.85rem;
+      font-style: italic;
+      line-height: 1.55;
+      color: #18160F;
+    }
+
+    .bridge {
+      display: grid;
+      grid-template-columns: 3px 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .bridge-line {
+      width: 3px;
+      border-radius: 2px;
+      align-self: stretch;
+    }
+
+    .bridge-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .bridge-text {
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: #4A4139;
+    }
+
+    .practice {
+      border-radius: 7px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .practice-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .practice-text {
+      font-size: 0.75rem;
+      line-height: 1.55;
+    }
+
+    .option-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+      padding: 0.5rem;
+      color: rgba(0,0,0,0.4);
+      background: #F0EBE3;
+    }
+
+    /* ══ A: FOREST GREEN ══ */
+    .a { --c: #2D6A4F; --cl: #D8EDDF; --cd: #1A4733; --cq: #E4F0E8; }
+    .a .card-header { background: #F7F3EC; }
+    .a .progress { background: var(--c); }
+    .a .nav-dot.active { color: var(--cd); }
+    .a .label { color: var(--c); }
+    .a .heading em { color: var(--c); }
+    .a .quote-block { border-left-color: var(--c); background: var(--cq); }
+    .a .bridge-line { background: var(--c); }
+    .a .bridge-label { color: var(--cd); }
+    .a .practice { background: var(--cl); }
+    .a .practice-label { color: var(--cd); }
+    .a .practice-text { color: var(--cd); }
+
+    /* ══ B: TERRACOTTA ══ */
+    .b { --c: #B5451B; --cl: #FAE2D9; --cd: #8B3213; --cq: #FAEEE9; }
+    .b .card-header { background: #F7F3EC; }
+    .b .progress { background: var(--c); }
+    .b .nav-dot.active { color: var(--cd); }
+    .b .label { color: var(--c); }
+    .b .heading em { color: var(--c); }
+    .b .quote-block { border-left-color: var(--c); background: var(--cq); }
+    .b .bridge-line { background: var(--c); }
+    .b .bridge-label { color: var(--cd); }
+    .b .practice { background: var(--cl); }
+    .b .practice-label { color: var(--cd); }
+    .b .practice-text { color: var(--cd); }
+
+    /* ══ C: DEEP SAGE ══ */
+    .c { --c: #4E7A5F; --cl: #DBE9E0; --cd: #2E5A40; --cq: #E6F0E9; }
+    .c .card-header { background: #F7F3EC; }
+    .c .progress { background: var(--c); }
+    .c .nav-dot.active { color: var(--cd); }
+    .c .label { color: var(--c); }
+    .c .heading em { color: var(--c); }
+    .c .quote-block { border-left-color: var(--c); background: var(--cq); }
+    .c .bridge-line { background: var(--c); }
+    .c .bridge-label { color: var(--cd); }
+    .c .practice { background: var(--cl); }
+    .c .practice-label { color: var(--cd); }
+    .c .practice-text { color: var(--cd); }
+
+    /* ══ D: BURGUNDY ══ */
+    .d { --c: #8B2D3F; --cl: #F2DDE1; --cd: #6A1E2E; --cq: #F5E6E9; }
+    .d .card-header { background: #F7F3EC; }
+    .d .progress { background: var(--c); }
+    .d .nav-dot.active { color: var(--cd); }
+    .d .label { color: var(--c); }
+    .d .heading em { color: var(--c); }
+    .d .quote-block { border-left-color: var(--c); background: var(--cq); }
+    .d .bridge-line { background: var(--c); }
+    .d .bridge-label { color: var(--cd); }
+    .d .practice { background: var(--cl); }
+    .d .practice-label { color: var(--cd); }
+    .d .practice-text { color: var(--cd); }
+  </style>
+</head>
+<body>
+
+<h1>Color Options — SpaceX PM Playbook</h1>
+
+<div class="grid">
+
+  <!-- A: Forest Green -->
+  <div class="card a">
+    <div class="option-label">A &mdash; Forest Green &nbsp;·&nbsp; #2D6A4F</div>
+    <div class="card-header">
+      <span class="card-header-title">SpaceX × PM</span>
+      <div class="progress"></div>
+      <div class="nav-dots">
+        <span class="nav-dot active">Overview</span>
+        <span class="nav-dot">01 Cost</span>
+        <span class="nav-dot">02 Req</span>
+        <span class="nav-dot">03 Val</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="label">Podcast Recap · For Product Managers</div>
+      <div class="heading">7 lessons <em>SpaceX</em><br>taught me about<br>product.</div>
+      <div class="subtext">SpaceX's playbook runs on feedback loops, first principles, and shipping fast enough that reality corrects you.</div>
+      <div class="quote-block">
+        <div class="quote-text">"The materials cost of a rocket was around 2% of the typical price. 98 cents of every dollar was going somewhere else."</div>
+      </div>
+      <div class="bridge">
+        <div class="bridge-line"></div>
+        <div>
+          <div class="bridge-label">The PM Translation</div>
+          <div class="bridge-text">In product, the equivalent of "atoms" is ideas — they're essentially free. The expensive part is engineering time, coordination, and review cycles.</div>
+        </div>
+      </div>
+      <div class="practice">
+        <div>
+          <div class="practice-label">In Practice</div>
+          <div class="practice-text">Run an "idiot index" on your roadmap. For every feature, ask: what's the ratio of eng weeks to user value delivered?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B: Terracotta -->
+  <div class="card b">
+    <div class="option-label">B &mdash; Terracotta &nbsp;·&nbsp; #B5451B</div>
+    <div class="card-header">
+      <span class="card-header-title">SpaceX × PM</span>
+      <div class="progress"></div>
+      <div class="nav-dots">
+        <span class="nav-dot active">Overview</span>
+        <span class="nav-dot">01 Cost</span>
+        <span class="nav-dot">02 Req</span>
+        <span class="nav-dot">03 Val</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="label">Podcast Recap · For Product Managers</div>
+      <div class="heading">7 lessons <em>SpaceX</em><br>taught me about<br>product.</div>
+      <div class="subtext">SpaceX's playbook runs on feedback loops, first principles, and shipping fast enough that reality corrects you.</div>
+      <div class="quote-block">
+        <div class="quote-text">"The materials cost of a rocket was around 2% of the typical price. 98 cents of every dollar was going somewhere else."</div>
+      </div>
+      <div class="bridge">
+        <div class="bridge-line"></div>
+        <div>
+          <div class="bridge-label">The PM Translation</div>
+          <div class="bridge-text">In product, the equivalent of "atoms" is ideas — they're essentially free. The expensive part is engineering time, coordination, and review cycles.</div>
+        </div>
+      </div>
+      <div class="practice">
+        <div>
+          <div class="practice-label">In Practice</div>
+          <div class="practice-text">Run an "idiot index" on your roadmap. For every feature, ask: what's the ratio of eng weeks to user value delivered?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C: Deep Sage -->
+  <div class="card c">
+    <div class="option-label">C &mdash; Deep Sage &nbsp;·&nbsp; #4E7A5F</div>
+    <div class="card-header">
+      <span class="card-header-title">SpaceX × PM</span>
+      <div class="progress"></div>
+      <div class="nav-dots">
+        <span class="nav-dot active">Overview</span>
+        <span class="nav-dot">01 Cost</span>
+        <span class="nav-dot">02 Req</span>
+        <span class="nav-dot">03 Val</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="label">Podcast Recap · For Product Managers</div>
+      <div class="heading">7 lessons <em>SpaceX</em><br>taught me about<br>product.</div>
+      <div class="subtext">SpaceX's playbook runs on feedback loops, first principles, and shipping fast enough that reality corrects you.</div>
+      <div class="quote-block">
+        <div class="quote-text">"The materials cost of a rocket was around 2% of the typical price. 98 cents of every dollar was going somewhere else."</div>
+      </div>
+      <div class="bridge">
+        <div class="bridge-line"></div>
+        <div>
+          <div class="bridge-label">The PM Translation</div>
+          <div class="bridge-text">In product, the equivalent of "atoms" is ideas — they're essentially free. The expensive part is engineering time, coordination, and review cycles.</div>
+        </div>
+      </div>
+      <div class="practice">
+        <div>
+          <div class="practice-label">In Practice</div>
+          <div class="practice-text">Run an "idiot index" on your roadmap. For every feature, ask: what's the ratio of eng weeks to user value delivered?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- D: Burgundy -->
+  <div class="card d">
+    <div class="option-label">D &mdash; Burgundy &nbsp;·&nbsp; #8B2D3F</div>
+    <div class="card-header">
+      <span class="card-header-title">SpaceX × PM</span>
+      <div class="progress"></div>
+      <div class="nav-dots">
+        <span class="nav-dot active">Overview</span>
+        <span class="nav-dot">01 Cost</span>
+        <span class="nav-dot">02 Req</span>
+        <span class="nav-dot">03 Val</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="label">Podcast Recap · For Product Managers</div>
+      <div class="heading">7 lessons <em>SpaceX</em><br>taught me about<br>product.</div>
+      <div class="subtext">SpaceX's playbook runs on feedback loops, first principles, and shipping fast enough that reality corrects you.</div>
+      <div class="quote-block">
+        <div class="quote-text">"The materials cost of a rocket was around 2% of the typical price. 98 cents of every dollar was going somewhere else."</div>
+      </div>
+      <div class="bridge">
+        <div class="bridge-line"></div>
+        <div>
+          <div class="bridge-label">The PM Translation</div>
+          <div class="bridge-text">In product, the equivalent of "atoms" is ideas — they're essentially free. The expensive part is engineering time, coordination, and review cycles.</div>
+        </div>
+      </div>
+      <div class="practice">
+        <div>
+          <div class="practice-label">In Practice</div>
+          <div class="practice-text">Run an "idiot index" on your roadmap. For every feature, ask: what's the ratio of eng weeks to user value delivered?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
