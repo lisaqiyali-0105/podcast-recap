@@ -133,30 +133,31 @@
       padding: 2.5rem 2rem 4rem;
     }
 
-    /* ── FILTER HINT ── */
-    .filter-hint {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin: 0 0 1.25rem;
-      max-width: 600px;
-      line-height: 1.6;
-    }
-
-    /* ── TOOLBAR ── */
+    /* ── TOOLBAR (count + sort + view) ── */
     .toolbar {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      margin-bottom: 2rem;
+      margin-bottom: 0.75rem;
       flex-wrap: wrap;
     }
 
+    /* ── CHIPS ── */
     .filter-chips {
       display: flex;
       align-items: center;
       gap: 0.4rem;
       flex-wrap: wrap;
-      flex: 1;
+      margin-bottom: 0.75rem;
+    }
+
+    /* ── FILTER HINT ── */
+    .filter-hint {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 0 0 1.5rem;
+      max-width: 600px;
+      line-height: 1.6;
     }
 
     .chip {
@@ -231,10 +232,6 @@
     .view-btn svg { width: 15px; height: 15px; pointer-events: none; }
 
     /* ── SECTION HEADER ── */
-    .section-header {
-      margin-bottom: 1.25rem;
-    }
-
     .section-title {
       font-family: var(--font-d);
       font-size: 1.3rem;
@@ -247,7 +244,6 @@
       font-size: 0.8rem;
       color: var(--text-muted);
       font-family: var(--font-m);
-      margin-top: 0.2rem;
     }
 
     /* ── GRID ── */
@@ -479,18 +475,16 @@
 <!-- MAIN -->
 <main class="main">
 
-  <!-- TOOLBAR -->
+  <!-- COUNT ROW: title + sort + view -->
   <div class="toolbar">
-    <div class="filter-chips" id="filter-chips" role="group" aria-label="Filter by perspective">
-      <!-- dynamically populated -->
-    </div>
-
+    <div class="section-title">All notes</div>
+    <div class="section-count" id="count-label"></div>
+    <div style="flex:1"></div>
     <select class="sort-select" id="sort" aria-label="Sort order">
       <option value="newest">Most recent</option>
       <option value="oldest">Oldest first</option>
       <option value="az">A → Z</option>
     </select>
-
     <div class="view-toggle" role="group" aria-label="View mode">
       <button class="view-btn active" id="btn-grid" title="Grid view" aria-pressed="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
@@ -501,14 +495,13 @@
     </div>
   </div>
 
+  <!-- CHIPS -->
+  <div class="filter-chips" id="filter-chips" role="group" aria-label="Filter by perspective">
+    <!-- dynamically populated -->
+  </div>
+
   <!-- HELPER TEXT -->
   <p class="filter-hint">Each note is written through a specific perspective — PM, manager, founder. Pick one to see how the same ideas translate depending on a unique point of view.</p>
-
-  <!-- SECTION HEADER -->
-  <div class="section-header">
-    <div class="section-title">All notes</div>
-    <div class="section-count" id="count-label"></div>
-  </div>
 
   <!-- CARDS -->
   <div id="grid" class="grid" role="list"></div>
