@@ -13,6 +13,7 @@ Output: transcript text to stdout + saves to ~/Downloads/transcripts/<title>.txt
 
 import sys
 import os
+import json
 import argparse
 import tempfile
 import urllib.request
@@ -34,7 +35,87 @@ PERSONA_LABELS = {
 }
 
 
-def _persona_prompt(persona: str, title: str, notes: str = '', context: str = '') -> str:
+# ─── Gemma 4 pipeline (optional) ─────────────────────────────────────────────
+
+def check_gemma4():
+    """Check if Ollama is running and a Gemma model is available.
+
+    Returns (model_name, None) if a Gemma model is ready to use.
+    Returns (None, reason_string) if unavailable — caller should skip gracefully.
+    Prefers gemma4 variants over gemma3.
+    """
+    try:
+        with urllib.request.urlopen('http://localhost:11434/api/tags', timeout=2) as res:
+            data = json.loads(res.read())
+        models = [m['name'] for m in data.get('models', [])]
+        for name in models:
+            if name.lower().startswith('gemma4'):
+                return name, None
+        for name in models:
+            if name.lower().startswith('gemma3'):
+                return name, None
+        available = ', '.join(models) if models else 'none'
+        return None, f"No Gemma model found in Ollama. Available: {available}\n   Pull one with: ollama pull gemma4"
+    except OSError:
+        return None, "Ollama not running — start it with: ollama serve"
+    except Exception as e:
+        return None, f"Ollama check failed: {e}"
+
+
+def run_gemma4_firstpass(transcript, persona, title, model_name):
+    """Run a fast first-pass angle extraction through Gemma via Ollama.
+
+    Intentionally lean prompt — we want raw, divergent angles, not polished output.
+    Claude will synthesize and deepen these in the second pass.
+    Returns the raw text string, or None on any failure.
+    """
+    key = persona.lower().strip()
+    _bridge_label, _practice_label = PERSONA_LABELS.get(
+        key, (f'The {persona.title()} Lens', 'Try This')
+    )
+
+    prompt = f"""You are analyzing a podcast transcript for someone with the role: {persona}.
+
+Transcript title: {title}
+
+Your task: extract 5 raw angles — the ideas that would genuinely matter to a {persona}.
+Be specific to that role's real pressures and decisions. No intro. No conclusion. Just the angles.
+
+For each angle:
+## [Short angle title]
+> [verbatim quote from transcript — exact words]
+[1–2 sentences on why this matters specifically to a {persona}]
+
+Transcript:
+{transcript}"""
+
+    payload = json.dumps({
+        "model": model_name,
+        "messages": [{"role": "user", "content": prompt}],
+        "stream": False,
+        "options": {"num_ctx": 131072}
+    }).encode()
+
+    req = urllib.request.Request(
+        'http://localhost:11434/api/chat',
+        data=payload,
+        headers={'Content-Type': 'application/json'},
+        method='POST'
+    )
+
+    try:
+        with urllib.request.urlopen(req, timeout=300) as res:
+            data = json.loads(res.read())
+        return data.get('message', {}).get('content', '').strip() or None
+    except Exception as e:
+        print(f"  Gemma first-pass error: {e}", file=sys.stderr)
+        return None
+
+
+# ─── Analysis prompt ──────────────────────────────────────────────────────────
+
+def _persona_prompt(persona: str, title: str, notes: str = '', context: str = '',
+                    gemma4_angles: str = None, gemma4_model: str = None) -> str:
     """Return the analysis instruction block printed after the transcript."""
     key = persona.lower().strip()
     bridge_label, practice_label = PERSONA_LABELS.get(
@@ -60,6 +141,30 @@ Apply this when generating insights — make the analysis specific to their actu
 situation, not a generic {persona}.
 """
 
+    gemma4_block = ''
+    synthesis_note = ''
+    if gemma4_angles:
+        model_label = gemma4_model or 'Gemma 4'
+        gemma4_block = f"""
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FIRST-PASS ANGLES FROM {model_label.upper()} (local model — raw, unpolished)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{gemma4_angles}
+
+"""
+        synthesis_note = f"""
+You have both the full transcript above AND a first-pass angle extraction from {model_label} (a local model).
+
+Use the transcript as your primary source — ground every insight in the actual words.
+Treat the {model_label} angles as a second pair of eyes: incorporate any angles that are
+genuinely insightful and you might have missed; discard those that are weak or redundant.
+The final analysis should be stronger than either model could produce alone.
+"""
+    else:
+        synthesis_note = f"""
+Using the transcript above, identify 5–7 key themes through the lens of a {persona}.
+"""
+
     return f"""
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -67,9 +172,7 @@ PODCAST-RECAP ANALYSIS REQUEST
 Persona: {persona}
 Content: {title}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-{notes_block}{context_block}
-Using the transcript above, identify 5–7 key themes through the lens of a {persona}.
-
+{gemma4_block}{notes_block}{context_block}{synthesis_note}
 Think deeply about what someone in this role actually cares about — their daily pressures,
 the decisions they own, the metrics they're held to, and what "useful" means to them
 specifically. Don't apply a generic lens; apply the real one.
@@ -91,6 +194,8 @@ After all themes, close with:
 """
 
 
+# ─── Audio acquisition ────────────────────────────────────────────────────────
+
 def fetch_rss_audio_url(rss_url, guid):
     """Parse RSS feed, find episode by GUID, return the .mp3 enclosure URL."""
     print(f"Fetching RSS feed: {rss_url}", file=sys.stderr)
@@ -101,7 +206,6 @@ def fetch_rss_audio_url(rss_url, guid):
         xml_data = res.read()
 
     root = ET.fromstring(xml_data)
-    ns = {'itunes': 'http://www.itunes.com/dtds/podcast-1.0.dtd'}
 
     for item in root.iter('item'):
         item_guid = item.findtext('guid', '').strip()
@@ -139,15 +243,11 @@ def download_youtube(url, dest_dir):
     import subprocess
     print(f"Downloading YouTube audio via yt-dlp...", file=sys.stderr)
 
-    # Step 1: fetch title only (--skip-download avoids triggering simulation mode
-    # that --print alone causes, which would skip the actual download below).
     title_result = subprocess.run([
         'yt-dlp', '--skip-download', '--print', 'title', url
     ], capture_output=True, text=True)
     title = title_result.stdout.strip().split('\n')[0] if title_result.returncode == 0 else 'episode'
 
-    # Step 2: download audio with a fixed output name to avoid filename
-    # sanitization mismatches between raw metadata and filesystem-safe names.
     dl_result = subprocess.run([
         'yt-dlp', '-x', '--audio-format', 'mp3',
         '--audio-quality', '0',
@@ -160,6 +260,9 @@ def download_youtube(url, dest_dir):
 
     mp3_path = Path(dest_dir) / 'audio.mp3'
     return str(mp3_path), title
+
+
+# ─── Transcription ────────────────────────────────────────────────────────────
 
 def transcribe(audio_path, model_size='small'):
     """Transcribe audio using mlx-whisper (Apple Silicon GPU) if available,
@@ -213,12 +316,14 @@ def save_transcript(text, title, output_dir=None):
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Sanitize title for filename
     safe_title = ''.join(c if c.isalnum() or c in ' -_' else '_' for c in title)
     safe_title = safe_title.strip() or 'transcript'
     out_path = output_dir / f"{safe_title}.txt"
     out_path.write_text(text)
     return str(out_path)
+
+
+# ─── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
     parser = argparse.ArgumentParser(description='Transcribe a podcast episode locally using Whisper.')
@@ -230,18 +335,18 @@ def main():
 
     parser.add_argument('--guid', help='Episode GUID (required with --rss)')
     parser.add_argument('--model', default='small', choices=['tiny', 'base', 'small', 'medium'],
-                        help='Whisper model size (default: small). Claude selects automatically based on content type.')
+                        help='Whisper model size (default: small).')
     parser.add_argument('--output', help='Output directory for transcript file')
     parser.add_argument('--persona', default='pm', metavar='ROLE',
                         help='Your role/perspective for the analysis (default: pm). '
                              'Any role works: pm, engineer, designer, gtm, founder, ceo, '
                              'investor, "chief of staff", "sales rep", etc.')
     parser.add_argument('--notes', default='', metavar='TEXT',
-                        help='Your immediate reactions after listening — dictated or typed. '
-                             'Gets woven into the analysis to anchor it in your actual experience.')
+                        help='Your immediate reactions after listening — woven into the analysis.')
     parser.add_argument('--context', default='', metavar='TEXT',
-                        help='Your specific situation, e.g. "PM at enterprise SaaS focused on search". '
-                             'Makes the analysis specific to you, not just your role type.')
+                        help='Your specific situation — makes the analysis specific to you.')
+    parser.add_argument('--no-gemma', action='store_true',
+                        help='Skip the Gemma first-pass step even if Ollama is running.')
 
     args = parser.parse_args()
 
@@ -278,14 +383,33 @@ def main():
         print(f"\nTranscript saved to: {out_path}", file=sys.stderr)
         print(f"Word count: ~{len(transcript.split()):,}", file=sys.stderr)
 
+        # Optional Gemma first-pass
+        gemma4_angles = None
+        gemma4_model = None
+
+        if not args.no_gemma:
+            print(f"\nChecking for Gemma (local first-pass)...", file=sys.stderr)
+            model_name, reason = check_gemma4()
+            if model_name:
+                print(f"  Found {model_name} — running first-pass angle extraction...", file=sys.stderr)
+                gemma4_angles = run_gemma4_firstpass(transcript, args.persona, title, model_name)
+                gemma4_model = model_name
+                if gemma4_angles:
+                    print(f"  First-pass complete — Claude will synthesize both.", file=sys.stderr)
+                else:
+                    print(f"  First-pass failed — continuing with Claude-only recap.", file=sys.stderr)
+            else:
+                print(f"  Gemma not available ({reason})", file=sys.stderr)
+                print(f"  Continuing with Claude-only recap.", file=sys.stderr)
+
         # Print transcript to stdout (so Claude can read it)
         print(transcript)
 
-        # Append persona analysis prompt
-        print(_persona_prompt(args.persona, title, args.notes, args.context))
+        # Append persona analysis prompt (with Gemma angles if available)
+        print(_persona_prompt(args.persona, title, args.notes, args.context,
+                              gemma4_angles, gemma4_model))
 
     finally:
-        # Clean up temp files
         import shutil
         if tmp_dir and os.path.exists(tmp_dir):
             shutil.rmtree(tmp_dir, ignore_errors=True)

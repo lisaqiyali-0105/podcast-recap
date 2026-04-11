@@ -16,19 +16,47 @@ Transcribe any audio locally using mlx-whisper (Apple Silicon GPU) or faster-whi
 - "recap this podcast as an engineer / designer / GTM"
 - "[Podcast name], [episode description]" — no URL needed, Claude finds it
 
-## Step 0: Ask for immediate reactions (MANDATORY — do this before running the script)
+## Step 0: Ask two questions before running the script (BOTH MANDATORY)
 
-Before running `transcribe.py`, always ask:
+Before running `transcribe.py`, always ask **both** of these. Never assume either.
+
+### Question 1 — Persona (MANDATORY — always ask, never default)
+
+Ask the persona question with context about the episode woven in. Use the episode title, guest, or topic to make the example concrete and relevant:
+
+> "What's your role or perspective for this recap? For example: PM, founder, engineer, investor — or describe your job.
+>
+> The podcast might not be in your industry — that's fine. The goal is to find the patterns and parallels that apply to *your* decisions. [A Tony Xu story about last-mile logistics hits differently for a PM than for a founder or an investor.] Pick the perspective that matches the kinds of decisions you make day-to-day."
+
+Replace the bracketed example with a sentence that references the actual episode — guest name, topic, or key idea — so it feels specific, not generic.
+
+Wait for the answer. Use it as the `--persona` value.
+
+**Never assume `pm` or any default.** Even if the user is a PM, they may want a founder or investor perspective on a given episode. Always ask.
+
+**Exception:** If the user already specified a perspective in the trigger message (e.g., "recap this as a founder"), extract that and skip the question.
+
+### Question 2 — Immediate reactions (MANDATORY — ask after persona)
 
 > "Before I generate anything — what's your immediate reaction from listening? What landed? Even one sentence is enough."
 
-Wait for the user's answer. Use it as the `--notes` value when running the script.
+Wait for the answer. Use it as the `--notes` value.
 
 **Why this matters:** This step activates your short-term memory before it fades, and anchors the analysis to *your* experience of the episode — not a generic reading of it. Skipping it produces a generic recap. Doing it produces one that's specific to what you actually got out of listening.
 
-**Exceptions:**
-- If the user already included their reactions in the trigger message (e.g., "the idiot index blew my mind — recap this"), extract that as `--notes` and skip the question.
-- If the user says "just transcribe, no notes" or "skip the reflection prompt", proceed without `--notes`.
+**Exception:** If the user already included their reactions in the trigger message, extract that as `--notes` and skip the question. If the user says "just transcribe, no notes" or "skip the reflection prompt", proceed without `--notes`.
+
+### Ask both in one message
+
+To avoid unnecessary back-and-forth, ask both questions together in a single message. Make the persona question specific to the episode:
+
+> "Two quick things before I run this:
+> 1. What's your role or perspective for this recap? (PM, founder, engineer, investor — or describe your job.) The podcast might not be in your industry — that's fine. The goal is to find the patterns and parallels that apply to *your* decisions. [A Tony Xu story about earning customer trust hits differently for a PM than for a founder or an investor.] Pick the perspective that matches the kinds of decisions you make day-to-day.
+> 2. What's your immediate reaction from listening — what landed for you? Even one sentence."
+
+Replace the bracketed sentence with a reference to the actual episode — guest, topic, or a key idea from it.
+
+Wait for both answers before running the script.
 
 ## Script location
 `~/.claude/skills/podcast-recap/transcribe.py`
@@ -126,8 +154,34 @@ python3 ~/.claude/skills/podcast-recap/transcribe.py \
 | `--context` | `""` | Your specific situation — makes analysis specific to you, not just your role |
 | `--model` | `small` | Whisper model: `tiny`, `base`, `small`, `medium` |
 | `--output` | `~/Downloads/transcripts/` | Output directory for transcript file |
+| `--no-gemma` | off | Skip the Gemma first-pass step even if Ollama is running |
 
 Note: `--youtube`, `--url`, `--mp3`, `--rss` are mutually exclusive. One is required.
+
+## 3-Model Pipeline (automatic when Ollama is running)
+
+After transcription, the script automatically checks for a local Gemma model and runs a first-pass angle extraction before Claude's deep analysis. This is **opt-in by having Ollama running** — no setup required, no failure if it's not installed.
+
+**How it works:**
+1. **Whisper** (mlx or faster-whisper) → accurate transcript
+2. **Gemma 4 / Gemma 3** (local via Ollama, optional) → fast first-pass: 5 raw angles through the listener's lens. Intentionally lean — divergent, not polished.
+3. **Claude** → deep analysis + synthesis. Reads both the transcript AND Gemma's angles. Incorporates the best of both; discards weak ones. Final output is stronger than either model alone.
+
+**What the user sees in stderr:**
+```
+Checking for Gemma (local first-pass)...
+  Found gemma3:12b — running first-pass angle extraction...
+  First-pass complete — Claude will synthesize both.
+```
+
+Or if Ollama isn't running:
+```
+Checking for Gemma (local first-pass)...
+  Gemma not available (Ollama not running — start it with: ollama serve)
+  Continuing with Claude-only recap.
+```
+
+**To skip Gemma even when Ollama is running:** pass `--no-gemma`.
 
 ## Persona Lenses (--persona flag)
 
@@ -151,8 +205,9 @@ The `--persona` flag is **open-ended** — pass any role, title, or description.
 4. For direct URLs: downloads the audio file
 5. Tries **mlx-whisper** (Apple Silicon GPU) first — ~7–10× faster than CPU. Falls back to **faster-whisper** (CPU) if mlx-whisper isn't installed
 6. Saves transcript to `~/Downloads/transcripts/<title>.txt`
-7. Prints transcript to stdout
-8. Appends persona analysis request block — Claude reads both and generates the recap
+7. **Optional:** checks for Gemma via Ollama — if available, runs a fast first-pass angle extraction (5 raw angles, role-specific). Gracefully skipped if Ollama isn't running.
+8. Prints transcript to stdout
+9. Appends persona analysis request block — includes Gemma's angles when available, telling Claude to synthesize both. Claude-only recap if Gemma is unavailable.
 
 ## Output
 - Transcript saved to: `~/Downloads/transcripts/<title>.txt`
