@@ -230,7 +230,7 @@ After generating the recap, offer to build an editorial HTML page. The reference
 **Design spec:**
 - **Layout:** Single-scroll page, no pagination
 - **Header:** Sticky, with:
-  - `← Library` back link (leftmost — always present, links to `../index.html`)
+  - `← Notebook` back link (leftmost — always present, links to `../index.html`)
   - Reading progress bar (2px terracotta line at bottom of header)
   - Note title (mono, uppercase)
   - Nav links to each lesson
