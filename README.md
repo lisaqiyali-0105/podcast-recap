@@ -24,7 +24,7 @@ The workflow is designed around how your memory actually works, not around ideal
 
 **Step 1 — Listen normally.** No note-taking required. Just listen.
 
-**Step 2 — Claude asks you first.** Before generating anything, Claude asks: *"What's your immediate reaction from listening? What landed?"* This activates your short-term memory before it fades and anchors the recap to your experience of the episode, not a generic reading of it. One sentence is enough. (If you're running the script directly without Claude, pass your reaction as `--notes`.)
+**Step 2 — Claude asks you two things first.** Before generating anything, Claude asks: *(1) Which perspective do you want the recap through?* (PM, founder, engineer, investor, etc.) and *(2) What's your immediate reaction from listening — what landed?* The persona determines the lens. Your reaction anchors the analysis to your experience, not a generic reading. One sentence is enough for each. (If you're running the script directly without Claude, pass these as `--persona` and `--notes`.)
 
 **Step 3 — Run podcast-recap.** The tool transcribes the full episode locally (no API key, runs on your machine), then generates a role-specific analysis connecting the podcast's big ideas to your actual work. Your reaction is woven in — so the output reflects what you actually got out of listening.
 
