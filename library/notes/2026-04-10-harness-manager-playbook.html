@@ -75,36 +75,53 @@
     .header-nav {
       display: flex;
       align-items: center;
-      gap: 0.25rem;
-      overflow-x: auto;
-      scrollbar-width: none;
+      gap: 10px;
       flex: 1;
     }
 
-    .header-nav::-webkit-scrollbar { display: none; }
-
-    .header-nav a {
-      font-family: var(--font-body);
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      text-decoration: none;
-      padding: 0 0.65rem;
-      min-height: 44px;
-      display: inline-flex;
+    .nav-dots {
+      display: flex;
       align-items: center;
-      border-radius: 6px;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .nav-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(181, 69, 27, 0.22);
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+      transition: background 0.18s, transform 0.18s;
+    }
+
+    .nav-dot:hover {
+      background: rgba(181, 69, 27, 0.5);
+      transform: scale(1.4);
+    }
+
+    .nav-dot.active {
+      background: #B5451B;
+      transform: scale(1.4);
+    }
+
+    .nav-sep {
+      width: 1px;
+      height: 14px;
+      background: #C4B5A5;
+      flex-shrink: 0;
+    }
+
+    .nav-label {
+      font-family: var(--font-mono);
+      font-size: 0.63rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
       white-space: nowrap;
-      transition: color 0.15s, background 0.15s;
-    }
-
-    .header-nav a:hover {
-      color: var(--text);
-      background: rgba(0,0,0,0.05);
-    }
-
-    .header-nav a.active {
-      color: var(--amber-deep);
-      font-weight: 500;
     }
 
     /* ── READING PROGRESS ── */
@@ -613,7 +630,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .header-nav a, .prompt-chip { transition: none; }
+      .nav-dot, .prompt-chip { transition: none; }
     }
 
     @media (max-width: 768px) {
@@ -641,14 +658,18 @@
   <div class="header-divider"></div>
   <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Reading progress"></div>
   <nav class="header-nav" aria-label="Lessons">
-    <a href="#overview">Overview</a>
-    <a href="#lesson-1">01 Structure</a>
-    <a href="#lesson-2">02 Environment</a>
-    <a href="#lesson-3">03 Context</a>
-    <a href="#lesson-4">04 Evaluation</a>
-    <a href="#lesson-5">05 Failure</a>
-    <a href="#lesson-6">06 Maturity</a>
-    <a href="#reflect">Reflect</a>
+    <div class="nav-dots">
+      <button class="nav-dot active" data-target="overview" data-label="Overview" aria-label="Overview"></button>
+      <button class="nav-dot" data-target="lesson-1" data-label="01 Structure" aria-label="01 Structure"></button>
+      <button class="nav-dot" data-target="lesson-2" data-label="02 Environment" aria-label="02 Environment"></button>
+      <button class="nav-dot" data-target="lesson-3" data-label="03 Context" aria-label="03 Context"></button>
+      <button class="nav-dot" data-target="lesson-4" data-label="04 Evaluation" aria-label="04 Evaluation"></button>
+      <button class="nav-dot" data-target="lesson-5" data-label="05 Failure" aria-label="05 Failure"></button>
+      <button class="nav-dot" data-target="lesson-6" data-label="06 Maturity" aria-label="06 Maturity"></button>
+      <button class="nav-dot" data-target="reflect" data-label="Reflect" aria-label="Reflect"></button>
+    </div>
+    <span class="nav-sep"></span>
+    <span class="nav-label">Overview</span>
   </nav>
 </header>
 
@@ -963,15 +984,26 @@
   }, { passive: true });
 
   // ── Active nav on scroll ─────────────────────────────────────
-  const sections = document.querySelectorAll('[id]');
-  const navLinks = document.querySelectorAll('.header-nav a');
+  const navDots = document.querySelectorAll('.nav-dot');
+  const navLabel = document.querySelector('.nav-label');
 
+  navDots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const el = document.getElementById(dot.dataset.target);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  const sections = document.querySelectorAll('[id]');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        navLinks.forEach(a => a.classList.remove('active'));
-        const active = document.querySelector(`.header-nav a[href="#${entry.target.id}"]`);
-        if (active) active.classList.add('active');
+        navDots.forEach(d => d.classList.remove('active'));
+        const active = document.querySelector(`.nav-dot[data-target="${entry.target.id}"]`);
+        if (active) {
+          active.classList.add('active');
+          navLabel.textContent = active.dataset.label;
+        }
       }
     });
   }, { rootMargin: '-20% 0px -70% 0px' });

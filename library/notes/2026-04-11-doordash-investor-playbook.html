@@ -86,36 +86,53 @@
     .header-nav {
       display: flex;
       align-items: center;
-      gap: 0.25rem;
-      overflow-x: auto;
-      scrollbar-width: none;
+      gap: 10px;
       flex: 1;
     }
 
-    .header-nav::-webkit-scrollbar { display: none; }
-
-    .header-nav a {
-      font-family: var(--font-body);
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      text-decoration: none;
-      padding: 0 0.65rem;
-      min-height: 44px;
-      display: inline-flex;
+    .nav-dots {
+      display: flex;
       align-items: center;
-      border-radius: 6px;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+
+    .nav-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(181, 69, 27, 0.22);
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+      transition: background 0.18s, transform 0.18s;
+    }
+
+    .nav-dot:hover {
+      background: rgba(181, 69, 27, 0.5);
+      transform: scale(1.4);
+    }
+
+    .nav-dot.active {
+      background: #B5451B;
+      transform: scale(1.4);
+    }
+
+    .nav-sep {
+      width: 1px;
+      height: 14px;
+      background: #C4B5A5;
+      flex-shrink: 0;
+    }
+
+    .nav-label {
+      font-family: var(--font-mono);
+      font-size: 0.63rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
       white-space: nowrap;
-      transition: color 0.15s, background 0.15s;
-    }
-
-    .header-nav a:hover {
-      color: var(--text);
-      background: rgba(0,0,0,0.05);
-    }
-
-    .header-nav a.active {
-      color: var(--amber-deep);
-      font-weight: 500;
     }
 
     a:focus-visible, button:focus-visible {
@@ -164,18 +181,14 @@
     }
 
     .hero-source {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 0;
     }
 
-    .hero-source-line { width: 2rem; height: 1px; background: var(--border); }
-
     .hero-source-text {
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       font-family: var(--font-mono);
+      letter-spacing: 0.02em;
     }
 
     .hero-source a {
@@ -206,22 +219,6 @@
     }
     .back-link:hover { color: var(--amber-deep); }
 
-    .synthesis-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.4rem 0.9rem;
-      background: var(--bg-alt);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
-    .synthesis-badge span { color: var(--amber); }
 
     /* ── LESSON ── */
     .lesson {
@@ -425,6 +422,34 @@
 
     .closing-body p { margin-bottom: 1rem; }
 
+    /* ── REFLECT: BEFORE / AFTER ── */
+    .reflect-phase-label {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    .reflect-phase-label.before { color: var(--text-muted); }
+    .reflect-phase-label.after  { color: var(--text-muted); margin-top: 2.5rem; margin-bottom: 0.75rem; }
+
+    .reflect-before {
+      background: rgba(181,69,27,0.07);
+      border-left: 3px solid var(--amber);
+      border-radius: 0 8px 8px 0;
+      padding: 1.25rem 1.5rem;
+    }
+
+    .reflect-before-text {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text);
+      font-style: italic;
+      margin: 0;
+    }
+
     /* ── REFLECTIONS ── */
     .reflections {
       padding: 5rem 2rem;
@@ -453,21 +478,14 @@
       font-weight: 700;
       line-height: 1.1;
       letter-spacing: -0.01em;
-      margin-bottom: 0.75rem;
-    }
-
-    .reflect-subtitle {
-      font-size: 0.95rem;
-      color: var(--text-mid);
-      max-width: 520px;
-      line-height: 1.65;
+      margin-bottom: 0;
     }
 
     .reflect-date-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 0.75rem;
+      margin-top: 0.75rem;
     }
 
     .reflect-date {
@@ -533,16 +551,7 @@
     .ql-snow.ql-toolbar button:hover .ql-fill,
     .ql-snow.ql-toolbar button.ql-active .ql-fill { fill: var(--amber); }
 
-    .reflect-prompts { margin-top: 2rem; }
-
-    .reflect-prompts-label {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 0.75rem;
-    }
+    .reflect-prompts { margin-bottom: 1rem; }
 
     .prompt-chips {
       display: flex;
@@ -551,8 +560,7 @@
     }
 
     .prompt-chip {
-      padding: 0.35rem 0.8rem;
-      min-height: 44px;
+      padding: 0.4rem 0.9rem;
       border: 1px solid var(--border);
       border-radius: 20px;
       font-size: 0.8rem;
@@ -561,6 +569,7 @@
       cursor: pointer;
       transition: all 0.15s;
       font-family: var(--font-body);
+      line-height: 1.4;
     }
 
     .prompt-chip:hover {
@@ -571,7 +580,7 @@
 
     /* ── RESPONSIVE ── */
     @media (prefers-reduced-motion: reduce) {
-      .header-nav a, .prompt-chip { transition: none; }
+      .nav-dot, .prompt-chip { transition: none; }
     }
 
     @media (max-width: 768px) {
@@ -597,18 +606,22 @@
   <div class="header-divider"></div>
   <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Reading progress"></div>
   <nav class="header-nav" aria-label="Lessons">
-    <a href="#overview">Overview</a>
-    <a href="#lesson-1">01 Moat</a>
-    <a href="#lesson-2">02 1,000 Days</a>
-    <a href="#lesson-3">03 TAM</a>
-    <a href="#lesson-4">04 Customer Signal</a>
-    <a href="#lesson-5">05 Experiments</a>
-    <a href="#lesson-6">06 Scarcity</a>
-    <a href="#lesson-7">07 Intelligence</a>
-    <a href="#lesson-8">08 Last 10 Feet</a>
-    <a href="#lesson-9">09 Community</a>
-    <a href="#closing">The Question</a>
-    <a href="#reflect">Reflect</a>
+    <div class="nav-dots">
+      <button class="nav-dot active" data-target="overview" data-label="Overview" aria-label="Overview"></button>
+      <button class="nav-dot" data-target="lesson-1" data-label="01 Moat" aria-label="01 Moat"></button>
+      <button class="nav-dot" data-target="lesson-2" data-label="02 1,000 Days" aria-label="02 1,000 Days"></button>
+      <button class="nav-dot" data-target="lesson-3" data-label="03 TAM" aria-label="03 TAM"></button>
+      <button class="nav-dot" data-target="lesson-4" data-label="04 Customer Signal" aria-label="04 Customer Signal"></button>
+      <button class="nav-dot" data-target="lesson-5" data-label="05 Experiments" aria-label="05 Experiments"></button>
+      <button class="nav-dot" data-target="lesson-6" data-label="06 Scarcity" aria-label="06 Scarcity"></button>
+      <button class="nav-dot" data-target="lesson-7" data-label="07 Intelligence" aria-label="07 Intelligence"></button>
+      <button class="nav-dot" data-target="lesson-8" data-label="08 Last 10 Feet" aria-label="08 Last 10 Feet"></button>
+      <button class="nav-dot" data-target="lesson-9" data-label="09 Community" aria-label="09 Community"></button>
+      <button class="nav-dot" data-target="closing" data-label="The Question" aria-label="The Question"></button>
+      <button class="nav-dot" data-target="reflect" data-label="Reflect" aria-label="Reflect"></button>
+    </div>
+    <span class="nav-sep"></span>
+    <span class="nav-label">Overview</span>
   </nav>
 </header>
 
@@ -617,14 +630,12 @@
   <!-- HERO -->
   <section id="overview">
     <div class="hero">
-      <p class="hero-eyebrow">Investor Perspective &middot; 109 min &middot; 2026-04-11</p>
+      <p class="hero-eyebrow">Video Recap &middot; Investor Lens</p>
       <h1>9 lessons <em>DoorDash</em><br>taught me about<br>building in the<br>physical world.</h1>
       <p class="hero-intro">On invisible moats, surviving the contrarian window, and why every logistics company is actually a data company.</p>
       <div class="hero-source">
-        <div class="hero-source-line"></div>
-        <span class="hero-source-text"><a href="https://www.youtube.com/watch?v=a8LWEMD9VJA" target="_blank" rel="noopener">Y Combinator &mdash; Tony Xu of DoorDash: Surviving 1,000 Days of Startup Hell &#8594;</a></span>
+        <span class="hero-source-text"><a href="https://www.youtube.com/watch?v=a8LWEMD9VJA" target="_blank" rel="noopener">Tony Xu of DoorDash: Surviving 1,000 Days of Startup Hell &#8594;</a></span>
       </div>
-      <div class="synthesis-badge">Synthesized from <span>Claude Sonnet 4.6</span>&nbsp;+&nbsp;<span>Gemma 4</span></div>
     </div>
   </section>
 
@@ -973,26 +984,33 @@
         <div class="reflect-header">
           <p class="reflect-eyebrow">Personal Notes</p>
           <h2 class="reflect-title">Your Reflections</h2>
-          <p class="reflect-subtitle">What&#39;s the contrarian bet you&#39;d make based on this episode? What due diligence question do you carry out of this?</p>
         </div>
 
-        <div class="reflect-date-row">
-          <span class="reflect-date" id="reflect-date"></span>
-          <span class="reflect-status" id="reflect-status"></span>
+        <!-- Before reading: listener's initial reaction -->
+        <span class="reflect-phase-label before">Before reading</span>
+        <div class="reflect-before">
+          <p class="reflect-before-text">&ldquo;The 1,000 days framing hit hard &mdash; the overnight success story always hides the decade of compounding. Also the driver scarcity angle. I hadn&rsquo;t thought of supply-side constraints as a structural moat before.&rdquo;</p>
         </div>
 
-        <div class="reflect-editor-wrap">
-          <div id="reflect-editor"></div>
-        </div>
+        <!-- After reading: editable space for evolved thinking -->
+        <span class="reflect-phase-label after">After reading</span>
 
         <div class="reflect-prompts">
-          <p class="reflect-prompts-label">Prompt starters &mdash; click to insert</p>
           <div class="prompt-chips">
             <button class="prompt-chip" data-prompt="Which of the 9 lessons changes how I evaluate my current investments?">Which lesson changes my current thinking?</button>
             <button class="prompt-chip" data-prompt="What is the one due diligence question I'd ask Tony Xu if I had 30 minutes?">One question for Tony</button>
             <button class="prompt-chip" data-prompt="Infrastructure play or service margin play &mdash; and why?">Infrastructure or service margin?</button>
             <button class="prompt-chip" data-prompt="What other company has the same invisible moat dynamic?">Parallel company?</button>
           </div>
+        </div>
+
+        <div class="reflect-editor-wrap">
+          <div id="reflect-editor"></div>
+        </div>
+
+        <div class="reflect-date-row">
+          <span class="reflect-date" id="reflect-date"></span>
+          <span class="reflect-status" id="reflect-status"></span>
         </div>
       </div>
     </div>
@@ -1014,15 +1032,26 @@
   }, { passive: true });
 
   // ── Active nav on scroll ─────────────────────────────────────
-  const sections = document.querySelectorAll('[id]');
-  const navLinks = document.querySelectorAll('.header-nav a');
+  const navDots = document.querySelectorAll('.nav-dot');
+  const navLabel = document.querySelector('.nav-label');
 
+  navDots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const el = document.getElementById(dot.dataset.target);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  const sections = document.querySelectorAll('[id]');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        navLinks.forEach(a => a.classList.remove('active'));
-        const active = document.querySelector(`.header-nav a[href="#${entry.target.id}"]`);
-        if (active) active.classList.add('active');
+        navDots.forEach(d => d.classList.remove('active'));
+        const active = document.querySelector(`.nav-dot[data-target="${entry.target.id}"]`);
+        if (active) {
+          active.classList.add('active');
+          navLabel.textContent = active.dataset.label;
+        }
       }
     });
   }, { rootMargin: '-20% 0px -70% 0px' });
@@ -1032,7 +1061,7 @@
   // ── Quill ────────────────────────────────────────────────────
   const quill = new Quill('#reflect-editor', {
     theme: 'snow',
-    placeholder: 'What landed for you? What due diligence question do you carry out of this?',
+    placeholder: 'What else surfaced after reading?',
     modules: {
       toolbar: [
         ['bold', 'italic', 'underline'],
