@@ -233,10 +233,11 @@ After generating the recap, offer to build an editorial HTML page. The reference
   - `← Notebook` back link (leftmost — always present, links to `../index.html`)
   - Reading progress bar (2px terracotta line at bottom of header)
   - Note title (mono, uppercase)
-  - Nav links to each lesson
+  - Dot nav: one `<button class="nav-dot">` per section, `data-target="[id]"` + `data-label="[name]"`, followed by `.nav-sep` + `.nav-label` that updates on scroll
 - **Accent color:** Terracotta (`#B5451B`) on warm parchment (`#F7F3EC`)
 - **Pull quotes:** Left border (4px solid terracotta), light tinted background — no dark color blocks
-- **Hero source line:** Always includes a clickable link to the original source (YouTube URL, RSS episode, or essay URL). Format: `<a href="[URL]" target="_blank" rel="noopener">[Source title] →</a>`. If no URL is available, plain text is acceptable.
+- **Hero eyebrow:** `[Podcast/Video] Recap · [Persona] Lens` — two parts only, no duration, no date. Examples: `Podcast Recap · For Product Managers`, `Video Recap · Investor Lens`
+- **Hero source line:** One clean line of attribution. Format: `<a href="[URL]" target="_blank" rel="noopener">[Episode/video title] →</a>`. Episode/video title only — never prepend channel name. No horizontal bar decorator. No model attribution. If no URL: plain text.
 - **Each lesson has:**
   - Large faded lesson number (zero-padded: 01, 02…)
   - Lesson label (e.g., "On Cost") + title
@@ -245,7 +246,10 @@ After generating the recap, offer to build an editorial HTML page. The reference
   - In-practice callout (light terracotta tint, SVG lightning bolt icon)
 - **Alternating backgrounds:** Even-numbered lessons use `#EFE8DC`
 - **Closing section:** "The Single Question" with the essay's closing argument, `id="closing"`
-- **Reflections:** `id="reflect"`, Quill v2 rich-text editor, localStorage auto-save (date-keyed), prompt chip buttons, reflect-date-row with today's date + save status
+- **Reflections:** `id="reflect"`, two-part layout:
+  - **"Before reading"** label (mono uppercase, muted) + terracotta left-border callout block showing the listener's `--notes` verbatim (non-editable)
+  - **"After reading"** label (same style) + prompt chips (no meta-label above them) + Quill v2 editor (blank, placeholder "What else surfaced after reading?") + date/status footer row below the editor
+  - localStorage auto-save, date-keyed storage key
 
 The HTML structure is persona-agnostic — only the bridge labels and framing change per role.
 
