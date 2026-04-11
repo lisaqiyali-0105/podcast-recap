@@ -186,6 +186,8 @@ Each note includes:
 - A concrete "In Practice" action per theme
 - A Quill-based reflection section (saves to your browser's localStorage)
 - Single-scroll layout with sticky nav and reading progress bar
+- **← Library** back link in the header — always present, returns you to your note library
+- **Source link** in the hero — clickable link to the original YouTube video, podcast episode, or essay
 
 ---
 

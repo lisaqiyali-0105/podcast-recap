@@ -270,10 +270,31 @@
 
     .hero-source a, .closing-attr a, .pull-quote-source a {
       color: inherit;
-      text-decoration: underline;
-      text-underline-offset: 3px;
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.15s, border-color 0.15s;
     }
-    .hero-source a:hover, .closing-attr a:hover { opacity: 0.75; }
+    .hero-source a:hover, .closing-attr a:hover { color: var(--amber); border-color: var(--amber); }
+
+    /* ── BACK LINK ── */
+    .back-link {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0 0.5rem;
+      min-height: 44px;
+      border-radius: 6px;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--amber-deep); }
 
     /* ── MANAGER BRIDGE ── */
     .pm-bridge {
@@ -614,6 +635,8 @@
 
 <!-- ── STICKY HEADER ── -->
 <header class="site-header">
+  <a class="back-link" href="../index.html">&#8592; Library</a>
+  <div class="header-divider"></div>
   <span class="header-title">Harness &times; <span>Manager</span></span>
   <div class="header-divider"></div>
   <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Reading progress"></div>

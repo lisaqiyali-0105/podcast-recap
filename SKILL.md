@@ -229,18 +229,23 @@ After generating the recap, offer to build an editorial HTML page. The reference
 
 **Design spec:**
 - **Layout:** Single-scroll page, no pagination
-- **Header:** Sticky, with reading progress bar (2px line at bottom), nav links to each lesson
+- **Header:** Sticky, with:
+  - `← Library` back link (leftmost — always present, links to `../index.html`)
+  - Reading progress bar (2px terracotta line at bottom of header)
+  - Note title (mono, uppercase)
+  - Nav links to each lesson
 - **Accent color:** Terracotta (`#B5451B`) on warm parchment (`#F7F3EC`)
 - **Pull quotes:** Left border (4px solid terracotta), light tinted background — no dark color blocks
+- **Hero source line:** Always includes a clickable link to the original source (YouTube URL, RSS episode, or essay URL). Format: `<a href="[URL]" target="_blank" rel="noopener">[Source title] →</a>`. If no URL is available, plain text is acceptable.
 - **Each lesson has:**
-  - Large faded lesson number
+  - Large faded lesson number (zero-padded: 01, 02…)
   - Lesson label (e.g., "On Cost") + title
   - Pull quote from source
   - Role bridge section (label varies by persona, e.g., "The PM Translation")
-  - In-practice callout (light terracotta tint, lightning bolt icon)
+  - In-practice callout (light terracotta tint, SVG lightning bolt icon)
 - **Alternating backgrounds:** Even-numbered lessons use `#EFE8DC`
-- **Closing section:** "The Single Question" with the essay's closing argument
-- **Reflections:** Quill v2 rich-text editor, localStorage auto-save (date-keyed), prompt chip buttons
+- **Closing section:** "The Single Question" with the essay's closing argument, `id="closing"`
+- **Reflections:** `id="reflect"`, Quill v2 rich-text editor, localStorage auto-save (date-keyed), prompt chip buttons, reflect-date-row with today's date + save status
 
 The HTML structure is persona-agnostic — only the bridge labels and framing change per role.
 
