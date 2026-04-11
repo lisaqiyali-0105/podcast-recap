@@ -181,12 +181,8 @@
     }
 
     .hero-source {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+      margin-bottom: 0;
     }
-
-    .hero-source-line { width: 2rem; height: 1px; background: var(--border); }
 
     .hero-source-text {
       font-size: 0.78rem;
@@ -517,21 +513,14 @@
       font-weight: 700;
       line-height: 1.1;
       letter-spacing: -0.01em;
-      margin-bottom: 0.75rem;
-    }
-
-    .reflect-subtitle {
-      font-size: 0.95rem;
-      color: var(--text-mid);
-      max-width: 520px;
-      line-height: 1.65;
+      margin-bottom: 0;
     }
 
     .reflect-date-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 0.75rem;
+      margin-top: 0.75rem;
     }
 
     .reflect-date {
@@ -597,22 +586,12 @@
     .ql-snow.ql-toolbar button:hover .ql-fill,
     .ql-snow.ql-toolbar button.ql-active .ql-fill { fill: var(--amber); }
 
-    .reflect-prompts { margin-top: 2rem; }
-
-    .reflect-prompts-label {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 0.75rem;
-    }
+    .reflect-prompts { margin-bottom: 1rem; }
 
     .prompt-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
     .prompt-chip {
-      padding: 0.35rem 0.8rem;
-      min-height: 44px;
+      padding: 0.4rem 0.9rem;
       border: 1px solid var(--border);
       border-radius: 20px;
       font-size: 0.8rem;
@@ -621,6 +600,7 @@
       cursor: pointer;
       transition: all 0.15s;
       font-family: var(--font-body);
+      line-height: 1.4;
     }
 
     .prompt-chip:hover {
@@ -682,7 +662,6 @@
       <h1>6 lessons <em>Harness<br>Engineering</em> taught<br>me about managing<br>people.</h1>
       <p class="hero-intro">A Chinese AI podcast broke down why agents fail in production &mdash; and every single reason maps directly onto why teams underperform. The problem isn&rsquo;t the model. It&rsquo;s never been the model.</p>
       <div class="hero-source">
-        <div class="hero-source-line"></div>
         <span class="hero-source-text"><a href="https://www.youtube.com/watch?v=3DlXq9nsQOE" target="_blank" rel="noopener">Watch the original video (in Chinese) →</a></span>
       </div>
     </div>
@@ -941,20 +920,9 @@
         <div class="reflect-header">
           <p class="reflect-eyebrow">Personal Notes</p>
           <h2 class="reflect-title">Your Reflections</h2>
-          <p class="reflect-subtitle">What resonated? What&rsquo;s already true on your team? What needs to change? Write it while it&rsquo;s fresh.</p>
-        </div>
-
-        <div class="reflect-date-row">
-          <span class="reflect-date" id="reflect-date"></span>
-          <span class="reflect-status" id="reflect-status"></span>
-        </div>
-
-        <div class="reflect-editor-wrap">
-          <div id="reflect-editor"></div>
         </div>
 
         <div class="reflect-prompts">
-          <p class="reflect-prompts-label">Prompt starters &mdash; click to insert</p>
           <div class="prompt-chips">
             <button class="prompt-chip" data-prompt="The lesson that hit hardest was…">The lesson that hit hardest was&hellip;</button>
             <button class="prompt-chip" data-prompt="Which of my team members might be a structure problem, not a people problem?">Structure vs. people problem?</button>
@@ -963,6 +931,15 @@
             <button class="prompt-chip" data-prompt="If I left tomorrow, what team rituals and systems would survive without me?">What survives if I leave?</button>
             <button class="prompt-chip" data-prompt="Where am I over-briefing? What context can I move to just-in-time delivery?">Where am I over-briefing?</button>
           </div>
+        </div>
+
+        <div class="reflect-editor-wrap">
+          <div id="reflect-editor"></div>
+        </div>
+
+        <div class="reflect-date-row">
+          <span class="reflect-date" id="reflect-date"></span>
+          <span class="reflect-status" id="reflect-status"></span>
         </div>
       </div>
     </div>

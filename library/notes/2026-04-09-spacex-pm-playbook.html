@@ -183,12 +183,8 @@
     }
 
     .hero-source {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+      margin-bottom: 0;
     }
-
-    .hero-source-line { width: 2rem; height: 1px; background: var(--border); }
 
     .hero-source-text {
       font-size: 0.78rem;
@@ -523,21 +519,14 @@
       font-weight: 700;
       line-height: 1.1;
       letter-spacing: -0.01em;
-      margin-bottom: 0.75rem;
-    }
-
-    .reflect-subtitle {
-      font-size: 0.95rem;
-      color: var(--text-mid);
-      max-width: 520px;
-      line-height: 1.65;
+      margin-bottom: 0;
     }
 
     .reflect-date-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 0.75rem;
+      margin-top: 0.75rem;
     }
 
     .reflect-date {
@@ -604,16 +593,7 @@
     .ql-snow.ql-toolbar button.ql-active .ql-fill { fill: var(--amber); }
 
     .reflect-prompts {
-      margin-top: 2rem;
-    }
-
-    .reflect-prompts-label {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
     }
 
     .prompt-chips {
@@ -623,8 +603,7 @@
     }
 
     .prompt-chip {
-      padding: 0.35rem 0.8rem;
-      min-height: 44px;
+      padding: 0.4rem 0.9rem;
       border: 1px solid var(--border);
       border-radius: 20px;
       font-size: 0.8rem;
@@ -633,6 +612,7 @@
       cursor: pointer;
       transition: all 0.15s;
       font-family: var(--font-body);
+      line-height: 1.4;
     }
 
     .prompt-chip:hover {
@@ -697,7 +677,6 @@
       <h1>7 lessons <em>SpaceX</em><br>taught me about<br>product.</h1>
       <p class="hero-intro">SpaceX&rsquo;s playbook runs on feedback loops, first principles, and shipping fast enough that reality corrects you before you waste years on the wrong thing.</p>
       <div class="hero-source">
-        <div class="hero-source-line"></div>
         <span class="hero-source-text">Source: &ldquo;Atoms Are Cheap, Process Is Pricey&rdquo; &mdash; Max Olson</span>
       </div>
     </div>
@@ -976,20 +955,9 @@
         <div class="reflect-header">
           <p class="reflect-eyebrow">Personal Notes</p>
           <h2 class="reflect-title">Your Reflections</h2>
-          <p class="reflect-subtitle">What resonated? What do you want to try? Use this space to capture the ideas that felt most relevant to your work right now.</p>
-        </div>
-
-        <div class="reflect-date-row">
-          <span class="reflect-date" id="reflect-date"></span>
-          <span class="reflect-status" id="reflect-status"></span>
-        </div>
-
-        <div class="reflect-editor-wrap">
-          <div id="reflect-editor"></div>
         </div>
 
         <div class="reflect-prompts">
-          <p class="reflect-prompts-label">Prompt starters &mdash; click to insert</p>
           <div class="prompt-chips">
             <button class="prompt-chip" data-prompt="The lesson that hit hardest was…">The lesson that hit hardest was…</button>
             <button class="prompt-chip" data-prompt="My current Raptor engine problem is…">My current Raptor engine is…</button>
@@ -998,6 +966,15 @@
             <button class="prompt-chip" data-prompt="My product vision in one sentence:">My product vision in one sentence:</button>
             <button class="prompt-chip" data-prompt="My feedback loop currently takes ___ and I want to get it to ___:">My feedback loop speed:</button>
           </div>
+        </div>
+
+        <div class="reflect-editor-wrap">
+          <div id="reflect-editor"></div>
+        </div>
+
+        <div class="reflect-date-row">
+          <span class="reflect-date" id="reflect-date"></span>
+          <span class="reflect-status" id="reflect-status"></span>
         </div>
       </div>
     </div>
