@@ -653,15 +653,15 @@
   <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Reading progress"></div>
   <nav class="header-nav" aria-label="Lessons">
     <div class="nav-dots">
-      <button class="nav-dot active" data-target="overview" data-label="Overview" aria-label="Overview"></button>
-      <button class="nav-dot" data-target="lesson-1" data-label="01 Cost" aria-label="01 Cost"></button>
-      <button class="nav-dot" data-target="lesson-2" data-label="02 Requirements" aria-label="02 Requirements"></button>
-      <button class="nav-dot" data-target="lesson-3" data-label="03 Validation" aria-label="03 Validation"></button>
-      <button class="nav-dot" data-target="lesson-4" data-label="04 Cadence" aria-label="04 Cadence"></button>
-      <button class="nav-dot" data-target="lesson-5" data-label="05 Focus" aria-label="05 Focus"></button>
-      <button class="nav-dot" data-target="lesson-6" data-label="06 Vision" aria-label="06 Vision"></button>
-      <button class="nav-dot" data-target="lesson-7" data-label="07 Systems" aria-label="07 Systems"></button>
-      <button class="nav-dot" data-target="reflect" data-label="Reflect" aria-label="Reflect"></button>
+      <button class="nav-dot active" data-target="overview" aria-label="Overview"></button>
+      <button class="nav-dot" data-target="lesson-1" aria-label="01 Cost"></button>
+      <button class="nav-dot" data-target="lesson-2" aria-label="02 Requirements"></button>
+      <button class="nav-dot" data-target="lesson-3" aria-label="03 Validation"></button>
+      <button class="nav-dot" data-target="lesson-4" aria-label="04 Cadence"></button>
+      <button class="nav-dot" data-target="lesson-5" aria-label="05 Focus"></button>
+      <button class="nav-dot" data-target="lesson-6" aria-label="06 Vision"></button>
+      <button class="nav-dot" data-target="lesson-7" aria-label="07 Systems"></button>
+      <button class="nav-dot" data-target="reflect" aria-label="Reflect"></button>
     </div>
     <span class="nav-sep"></span>
     <span class="nav-label">Overview</span>
@@ -1006,7 +1006,7 @@
     });
   });
 
-  const sections = document.querySelectorAll('[id]');
+  const sections = document.querySelectorAll('section[id]');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -1014,7 +1014,7 @@
         const active = document.querySelector(`.nav-dot[data-target="${entry.target.id}"]`);
         if (active) {
           active.classList.add('active');
-          navLabel.textContent = active.dataset.label;
+          navLabel.textContent = active.getAttribute('aria-label');
         }
       }
     });

@@ -639,14 +639,14 @@
   <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Reading progress"></div>
   <nav class="header-nav" aria-label="Lessons">
     <div class="nav-dots">
-      <button class="nav-dot active" data-target="overview" data-label="Overview" aria-label="Overview"></button>
-      <button class="nav-dot" data-target="lesson-1" data-label="01 Structure" aria-label="01 Structure"></button>
-      <button class="nav-dot" data-target="lesson-2" data-label="02 Environment" aria-label="02 Environment"></button>
-      <button class="nav-dot" data-target="lesson-3" data-label="03 Context" aria-label="03 Context"></button>
-      <button class="nav-dot" data-target="lesson-4" data-label="04 Evaluation" aria-label="04 Evaluation"></button>
-      <button class="nav-dot" data-target="lesson-5" data-label="05 Failure" aria-label="05 Failure"></button>
-      <button class="nav-dot" data-target="lesson-6" data-label="06 Maturity" aria-label="06 Maturity"></button>
-      <button class="nav-dot" data-target="reflect" data-label="Reflect" aria-label="Reflect"></button>
+      <button class="nav-dot active" data-target="overview" aria-label="Overview"></button>
+      <button class="nav-dot" data-target="lesson-1" aria-label="01 Structure"></button>
+      <button class="nav-dot" data-target="lesson-2" aria-label="02 Environment"></button>
+      <button class="nav-dot" data-target="lesson-3" aria-label="03 Context"></button>
+      <button class="nav-dot" data-target="lesson-4" aria-label="04 Evaluation"></button>
+      <button class="nav-dot" data-target="lesson-5" aria-label="05 Failure"></button>
+      <button class="nav-dot" data-target="lesson-6" aria-label="06 Maturity"></button>
+      <button class="nav-dot" data-target="reflect" aria-label="Reflect"></button>
     </div>
     <span class="nav-sep"></span>
     <span class="nav-label">Overview</span>
@@ -971,7 +971,7 @@
     });
   });
 
-  const sections = document.querySelectorAll('[id]');
+  const sections = document.querySelectorAll('section[id]');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -979,7 +979,7 @@
         const active = document.querySelector(`.nav-dot[data-target="${entry.target.id}"]`);
         if (active) {
           active.classList.add('active');
-          navLabel.textContent = active.dataset.label;
+          navLabel.textContent = active.getAttribute('aria-label');
         }
       }
     });
