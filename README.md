@@ -216,18 +216,9 @@ Once installed, trigger it in Claude Code with:
 
 ---
 
-## Roadmap
-
-- [ ] **Spaced repetition** — cron job that resurfaces past recaps on a configurable schedule (daily / weekly / monthly). The goal is building recall, not just capturing.
-- [ ] **Telegram bot integration** — send a voice message to your Telegram bot right after listening; it kicks off the recap automatically and delivers the HTML note to you.
-- [ ] **Context memory** — remember your role, context, and preferences across sessions so you don't have to re-specify them every time.
-- [ ] **Multi-format export** — Obsidian markdown, Notion page, email digest.
-
----
-
 ## Built by
 
-Lisa Li — PM at AlphaSense. Built this because the gap between "inspired by a podcast" and "actually changed how I work" was too wide, and I got tired of pretending I'd go back and re-listen.
+Lisa Qiya Li — PM at AlphaSense.
 
 ---
 
