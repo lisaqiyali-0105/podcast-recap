@@ -32,6 +32,8 @@ The workflow is designed around how your memory actually works, not around ideal
 
 **Step 5 — Browse your notebook.** Every note is automatically saved to `notebook/` and appears in your personal notebook at `https://[your-username].github.io/podcast-recap/notebook/`. Filter by persona, search by source, see everything you've captured in one place.
 
+![Notebook index showing three notes filtered by persona](screenshots/0-notebook.png)
+
 **Step 6 — Revisit on a schedule.** *(Coming soon: cron job integration.)* A spaced repetition system resurfaces past notes at the right intervals to move knowledge from short-term memory into long-term retention. The goal is to read it multiple times, not once, so it actually changes how you work.
 
 ---
@@ -168,26 +170,26 @@ Common roles have custom labels built in (e.g., `founder` → "The Founder Lens 
 
 ## Example output
 
-[**Browse the Note Library →**](notebook/) — all generated notes in one place, with search, persona filters, and dark/light mode.
-
 [**View the SpaceX PM Note**](notebook/notes/2026-04-09-spacex-pm-playbook.html) — a full recap generated from "Atoms Are Cheap, Process Is Pricey" by Max Olson, analyzed through the lens of a product manager.
 
 > **Note:** The notebook uses `fetch()` to load the manifest, so it requires a server — it won't work if you double-click the file. Run `python3 -m http.server 8765 --directory notebook` and open `http://localhost:8765` to browse locally, or use the GitHub Pages URL.
 
-![Hero section showing the title and source citation](screenshots/1-hero.png)
+Each note opens with a hero section — the title, source citation, and a one-paragraph intro that frames the analysis:
 
-![Lesson 1 — pull quote, PM Translation, and In Practice action](screenshots/2-lesson.png)
+![Hero section showing the title, dot nav, and source citation](screenshots/1-hero.png)
 
-![Reflections section with the Quill rich-text editor](screenshots/3-reflections.png)
+Each big idea gets its own lesson block: a pull quote from the source, a role-specific translation (here, "The PM Translation"), and a concrete action to take:
 
-Each note includes:
-- Pull quotes from the source
-- Role-specific translation of each big idea
-- A concrete "In Practice" action per theme
-- A Quill-based reflection section (saves to your browser's localStorage)
-- Single-scroll layout with sticky nav and reading progress bar
-- **← Notebook** back link in the header — always present, returns you to your podcast notebook
-- **Source link** in the hero — clickable link to the original YouTube video, podcast episode, or essay
+![Lesson 1 — pull quote, PM Translation, and In Practice callout](screenshots/2-lesson.png)
+
+At the end, a reflections section captures what you brought into the reading and leaves space for what surfaced after:
+
+![Reflections section — Before reading callout and After reading editor](screenshots/3-reflections.png)
+
+Other details:
+- Sticky dot nav with reading progress bar and active section label
+- **← Notebook** back link — always present, returns you to the index
+- localStorage auto-save on the reflection editor
 
 ---
 
