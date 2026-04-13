@@ -152,6 +152,25 @@
     }
 
     /* ── FILTER HINT ── */
+    .notebook-footer {
+      margin-top: 4rem;
+      padding: 1.25rem 0 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .notebook-footer a {
+      color: var(--text-muted);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .notebook-footer a:hover { color: var(--text); }
+
     .filter-hint {
       font-size: 0.85rem;
       color: var(--text-muted);
@@ -160,13 +179,6 @@
       line-height: 1.6;
     }
 
-    .filter-hint a {
-      color: var(--text-muted);
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-
-    .filter-hint a:hover { color: var(--text); }
 
     .chip {
       height: 34px;
@@ -509,11 +521,15 @@
   </div>
 
   <!-- HELPER TEXT -->
-  <p class="filter-hint">Each note takes a podcast and applies it through a different lens — e.g., PM, manager, investor.<br>Made for Lisa Qiya Li. Built with <a href="https://github.com/lisaqiyali-0105/podcast-recap" target="_blank" rel="noopener">/podcast-recap</a> skill.</p>
+  <p class="filter-hint">Each note takes a podcast and applies it through a different lens — e.g., PM, manager, investor.</p>
 
   <!-- CARDS -->
   <div id="grid" class="grid" role="list"></div>
 
+  <footer class="notebook-footer">
+    <span>Made for Lisa Qiya Li.</span>
+    <span>Built with <a href="https://github.com/lisaqiyali-0105/podcast-recap" target="_blank" rel="noopener">/podcast-recap</a> skill.</span>
+  </footer>
 
 </main>
 
