@@ -30,7 +30,7 @@ The workflow is designed around how your memory actually works, not around ideal
 
 **Step 4 — Review the note.** You get a beautiful HTML document with pull quotes, your role-specific bridge between the podcast's ideas and your job, and a "try this" section for each theme. Your notes are woven in; the analysis references what you flagged.
 
-**Step 5 — Browse your library.** Every note is automatically saved to `library/` and appears in your personal notebook at `https://[your-username].github.io/podcast-recap/library/`. Filter by persona, search by source, see everything you've captured in one place.
+**Step 5 — Browse your notebook.** Every note is automatically saved to `notebook/` and appears in your personal notebook at `https://[your-username].github.io/podcast-recap/notebook/`. Filter by persona, search by source, see everything you've captured in one place.
 
 **Step 6 — Revisit on a schedule.** *(Coming soon: cron job integration.)* A spaced repetition system resurfaces past notes at the right intervals to move knowledge from short-term memory into long-term retention. The goal is to read it multiple times, not once, so it actually changes how you work.
 
@@ -168,11 +168,11 @@ Common roles have custom labels built in (e.g., `founder` → "The Founder Lens 
 
 ## Example output
 
-[**Browse the Note Library →**](library/) — all generated notes in one place, with search, persona filters, and dark/light mode.
+[**Browse the Note Library →**](notebook/) — all generated notes in one place, with search, persona filters, and dark/light mode.
 
-[**View the SpaceX PM Note**](library/notes/2026-04-09-spacex-pm-playbook.html) — a full recap generated from "Atoms Are Cheap, Process Is Pricey" by Max Olson, analyzed through the lens of a product manager.
+[**View the SpaceX PM Note**](notebook/notes/2026-04-09-spacex-pm-playbook.html) — a full recap generated from "Atoms Are Cheap, Process Is Pricey" by Max Olson, analyzed through the lens of a product manager.
 
-> **Note:** The library uses `fetch()` to load the manifest, so it requires a server — it won't work if you double-click the file. Run `python3 -m http.server 8765 --directory library` and open `http://localhost:8765` to browse locally, or use the GitHub Pages URL.
+> **Note:** The notebook uses `fetch()` to load the manifest, so it requires a server — it won't work if you double-click the file. Run `python3 -m http.server 8765 --directory notebook` and open `http://localhost:8765` to browse locally, or use the GitHub Pages URL.
 
 ![Hero section showing the title and source citation](screenshots/1-hero.png)
 
@@ -212,14 +212,14 @@ cp SKILL.md ~/.claude/skills/podcast-recap/SKILL.md
 cp transcribe.py ~/.claude/skills/podcast-recap/transcribe.py
 ```
 
-**Set up the note library** (one-time):
+**Set up the note notebook** (one-time):
 
 ```bash
 # Fork or clone this repo so Claude has somewhere to save notes
 git clone https://github.com/[your-username]/podcast-recap ~/Claude/podcast-recap
 ```
 
-Then enable GitHub Pages on the `library/` folder in your repo settings. Every note Claude generates will be auto-committed and pushed — your library at `https://[your-username].github.io/podcast-recap/library/` stays up to date automatically.
+Then enable GitHub Pages on the `notebook/` folder in your repo settings. Every note Claude generates will be auto-committed and pushed — your notebook at `https://[your-username].github.io/podcast-recap/notebook/` stays up to date automatically.
 
 Once installed, trigger it in Claude Code with:
 - "Lenny's podcast, Amol Anthropic head of growth, for a PM" — no URL needed, Claude finds it

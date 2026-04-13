@@ -225,7 +225,7 @@ Then read the full stdout (transcript + analysis block) and generate the role-sp
 
 ## Generating the HTML note
 
-After generating the recap, offer to build an editorial HTML page. The reference design is at `~/Claude/podcast-recap/library/notes/2026-04-09-spacex-pm-playbook.html`.
+After generating the recap, offer to build an editorial HTML page. The reference design is at `~/Claude/podcast-recap/notebook/notes/2026-04-09-spacex-pm-playbook.html`.
 
 **Design spec:**
 - **Layout:** Single-scroll page, no pagination
@@ -253,15 +253,15 @@ After generating the recap, offer to build an editorial HTML page. The reference
 
 The HTML structure is persona-agnostic — only the bridge labels and framing change per role.
 
-## Auto-saving to the library (MANDATORY)
+## Auto-saving to the notebook (MANDATORY)
 
 Every time an HTML note is generated, Claude must:
 
-1. **Save the HTML** to `~/Claude/podcast-recap/library/notes/YYYY-MM-DD-[slug].html`
+1. **Save the HTML** to `~/Claude/podcast-recap/notebook/notes/YYYY-MM-DD-[slug].html`
    - Slug = lowercase title, spaces → hyphens, special chars stripped
    - Example: `2026-04-10-spacex-pm-playbook.html`
 
-2. **Update `~/Claude/podcast-recap/library/manifest.json`** — append one entry:
+2. **Update `~/Claude/podcast-recap/notebook/manifest.json`** — append one entry:
    ```json
    {
      "id": "YYYY-MM-DD-[slug]",
@@ -277,12 +277,12 @@ Every time an HTML note is generated, Claude must:
 
 3. **Commit and push both files** to GitHub:
    ```bash
-   git -C ~/Claude/podcast-recap add library/notes/YYYY-MM-DD-[slug].html library/manifest.json
+   git -C ~/Claude/podcast-recap add notebook/notes/YYYY-MM-DD-[slug].html notebook/manifest.json
    git -C ~/Claude/podcast-recap commit -m "Add note: [title]"
    git -C ~/Claude/podcast-recap push origin main
    ```
 
-This keeps the library at `https://lisaqiyali-0105.github.io/podcast-recap/library/` up to date automatically.
+This keeps the notebook at `https://lisaqiyali-0105.github.io/podcast-recap/notebook/` up to date automatically.
 
 **Emoji guide by persona:**
 | Persona | Emoji |
