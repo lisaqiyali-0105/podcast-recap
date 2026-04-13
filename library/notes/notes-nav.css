@@ -1,0 +1,58 @@
+/* ── SHARED NAV STYLES ── */
+/* Used by all notes in library/notes/. Edit here to update all notes. */
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.nav-dots {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.nav-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(181, 69, 27, 0.22);
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.18s, transform 0.18s;
+}
+
+.nav-dot:hover {
+  background: rgba(181, 69, 27, 0.5);
+  transform: scale(1.4);
+}
+
+.nav-dot.active {
+  background: #B5451B;
+  transform: scale(1.4);
+}
+
+.nav-sep {
+  width: 1px;
+  height: 14px;
+  background: #C4B5A5;
+  flex-shrink: 0;
+}
+
+.nav-label {
+  font-family: var(--font-mono);
+  font-size: 0.63rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-dot { transition: none; }
+}

@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
+  <link rel="stylesheet" href="notes-nav.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -70,58 +71,6 @@
       height: 16px;
       background: var(--border);
       flex-shrink: 0;
-    }
-
-    .header-nav {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 1;
-    }
-
-    .nav-dots {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      flex-shrink: 0;
-    }
-
-    .nav-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      border: none;
-      background: rgba(181, 69, 27, 0.22);
-      cursor: pointer;
-      padding: 0;
-      flex-shrink: 0;
-      transition: background 0.18s, transform 0.18s;
-    }
-
-    .nav-dot:hover {
-      background: rgba(181, 69, 27, 0.5);
-      transform: scale(1.4);
-    }
-
-    .nav-dot.active {
-      background: #B5451B;
-      transform: scale(1.4);
-    }
-
-    .nav-sep {
-      width: 1px;
-      height: 14px;
-      background: #C4B5A5;
-      flex-shrink: 0;
-    }
-
-    .nav-label {
-      font-family: var(--font-mono);
-      font-size: 0.63rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      white-space: nowrap;
     }
 
     /* ── READING PROGRESS ── */
@@ -623,7 +572,7 @@
 
     /* ── REDUCED MOTION ── */
     @media (prefers-reduced-motion: reduce) {
-      .nav-dot, .prompt-chip { transition: none; }
+      .prompt-chip { transition: none; }
     }
 
     /* ── RESPONSIVE ── */
@@ -995,33 +944,6 @@
     progressBar.setAttribute('aria-valuenow', Math.round(pct));
   }, { passive: true });
 
-  // ── Active nav on scroll ─────────────────────────────────────
-  const navDots = document.querySelectorAll('.nav-dot');
-  const navLabel = document.querySelector('.nav-label');
-
-  navDots.forEach(dot => {
-    dot.addEventListener('click', () => {
-      const el = document.getElementById(dot.dataset.target);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    });
-  });
-
-  const sections = document.querySelectorAll('section[id]');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        navDots.forEach(d => d.classList.remove('active'));
-        const active = document.querySelector(`.nav-dot[data-target="${entry.target.id}"]`);
-        if (active) {
-          active.classList.add('active');
-          navLabel.textContent = active.getAttribute('aria-label');
-        }
-      }
-    });
-  }, { rootMargin: '-20% 0px -70% 0px' });
-
-  sections.forEach(s => observer.observe(s));
-
   // ── Quill ────────────────────────────────────────────────────
   const quill = new Quill('#reflect-editor', {
     theme: 'snow',
@@ -1078,5 +1000,6 @@
     });
   });
 </script>
+<script src="notes-nav.js"></script>
 </body>
 </html>
