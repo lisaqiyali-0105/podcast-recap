@@ -160,6 +160,31 @@
       line-height: 1.6;
     }
 
+    .notebook-footer {
+      margin-top: 4rem;
+      padding: 1.5rem 0 2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .notebook-footer-line {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .notebook-footer-line a {
+      color: var(--text-muted);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .notebook-footer-line a:hover {
+      color: var(--text);
+    }
+
     .chip {
       height: 34px;
       padding: 0 0.9rem;
@@ -501,10 +526,16 @@
   </div>
 
   <!-- HELPER TEXT -->
-  <p class="filter-hint">Each note is written through a specific perspective — PM, manager, founder. Pick one to see how the same ideas translate depending on a unique point of view.</p>
+  <p class="filter-hint">Each note takes the same source material and applies it through a different lens — PM, manager, investor. Filter by lens to see what shifts when the vantage point does.</p>
 
   <!-- CARDS -->
   <div id="grid" class="grid" role="list"></div>
+
+  <!-- FOOTER -->
+  <footer class="notebook-footer">
+    <p class="notebook-footer-line">Made for Lisa Qiya Li.</p>
+    <p class="notebook-footer-line">Built with <a href="https://github.com/lisaqiyali-0105/podcast-recap" target="_blank" rel="noopener">podcast-recap</a> — a personal tool for transcribing and annotating podcasts locally.</p>
+  </footer>
 
 </main>
 
