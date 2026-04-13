@@ -30,6 +30,14 @@ The workflow is designed around how your memory actually works, not around ideal
 
 **Step 4 — Review the note.** You get a beautiful HTML document with pull quotes, your role-specific bridge between the podcast's ideas and your job, and a "try this" section for each theme. Your notes are woven in; the analysis references what you flagged.
 
+![Hero section showing the title, dot nav, and source citation](screenshots/1-hero.png)
+
+![Lesson 1 — pull quote, PM Translation, and In Practice callout](screenshots/2-lesson.png)
+
+At the end of each note, a reflections section captures what you brought into the reading and leaves space for what surfaced after:
+
+![Reflections section — Before reading callout and After reading editor](screenshots/3-reflections.png)
+
 **Step 5 — Browse your notebook.** Every note is automatically saved to `notebook/` and appears in your personal notebook at `https://[your-username].github.io/podcast-recap/notebook/`. Filter by persona, search by source, see everything you've captured in one place.
 
 ![Notebook index showing three notes filtered by persona](screenshots/0-notebook.png)
@@ -168,31 +176,6 @@ Common roles have custom labels built in (e.g., `founder` → "The Founder Lens 
 
 ---
 
-## Example output
-
-[**View the SpaceX PM Note**](notebook/notes/2026-04-09-spacex-pm-playbook.html) — a full recap generated from "Atoms Are Cheap, Process Is Pricey" by Max Olson, analyzed through the lens of a product manager.
-
-> **Note:** The notebook uses `fetch()` to load the manifest, so it requires a server — it won't work if you double-click the file. Run `python3 -m http.server 8765 --directory notebook` and open `http://localhost:8765` to browse locally, or use the GitHub Pages URL.
-
-Each note opens with a hero section — the title, source citation, and a one-paragraph intro that frames the analysis:
-
-![Hero section showing the title, dot nav, and source citation](screenshots/1-hero.png)
-
-Each big idea gets its own lesson block: a pull quote from the source, a role-specific translation (here, "The PM Translation"), and a concrete action to take:
-
-![Lesson 1 — pull quote, PM Translation, and In Practice callout](screenshots/2-lesson.png)
-
-At the end, a reflections section captures what you brought into the reading and leaves space for what surfaced after:
-
-![Reflections section — Before reading callout and After reading editor](screenshots/3-reflections.png)
-
-Other details:
-- Sticky dot nav with reading progress bar and active section label
-- **← Notebook** back link — always present, returns you to the index
-- localStorage auto-save on the reflection editor
-
----
-
 ## Whisper model sizes
 
 | Flag | MLX speed | Accuracy | When to use |
@@ -222,6 +205,8 @@ git clone https://github.com/[your-username]/podcast-recap ~/Claude/podcast-reca
 ```
 
 Then enable GitHub Pages on the `notebook/` folder in your repo settings. Every note Claude generates will be auto-committed and pushed — your notebook at `https://[your-username].github.io/podcast-recap/notebook/` stays up to date automatically.
+
+> **Browsing locally:** The notebook uses `fetch()` to load notes, so it won't work if you double-click the file. Run `python3 -m http.server 8765 --directory notebook` and open `http://localhost:8765`, or use your GitHub Pages URL. [**See an example note →**](notebook/notes/2026-04-09-spacex-pm-playbook.html)
 
 Once installed, trigger it in Claude Code with:
 - "Lenny's podcast, Amol Anthropic head of growth, for a PM" — no URL needed, Claude finds it
