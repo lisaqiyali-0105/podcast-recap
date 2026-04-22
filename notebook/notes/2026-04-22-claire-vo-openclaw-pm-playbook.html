@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7 Lessons Claire Vo Taught Me About Managing Agents</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
+  <link rel="stylesheet" href="notes-nav.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #F7F3EC;
+      --bg-alt:       #EFE8DC;
+      --bg-quote:     #FAEEE9;
+      --text:         #18160F;
+      --text-mid:     #4A4139;
+      --text-muted:   #8C7E74;
+      --amber:        #B5451B;
+      --amber-light:  #FAE2D9;
+      --amber-deep:   #8B3213;
+      --border:       #DDD0BF;
+      --header-h:     52px;
+      --font-display: 'Bricolage Grotesque', Georgia, serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── STICKY HEADER ── */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: rgba(247, 243, 236, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+      gap: 2rem;
+    }
+
+    .header-title {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .header-title span { color: var(--amber); }
+
+    .header-divider {
+      width: 1px;
+      height: 16px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    /* ── READING PROGRESS ── */
+    .progress-bar {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--amber);
+      transition: width 0.1s linear;
+      border-radius: 0 2px 2px 0;
+    }
+
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--amber);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* ── LAYOUT ── */
+    .content { padding-top: var(--header-h); }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 6rem 2rem 5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 em { font-style: normal; color: var(--amber); }
+
+    .hero-intro {
+      font-size: 1.15rem;
+      line-height: 1.75;
+      color: var(--text-mid);
+      max-width: 560px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-source { margin-bottom: 0; }
+
+    .hero-source-text {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .hero-source a {
+      color: var(--text-muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .hero-source a:hover { color: var(--amber); border-color: var(--amber); }
+
+    /* ── BACK LINK ── */
+    .back-link {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0 0.5rem;
+      min-height: 44px;
+      border-radius: 6px;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--amber-deep); }
+
+    /* ── LESSON ── */
+    .lesson {
+      padding: 5rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lesson-alt { background: var(--bg-alt); }
+
+    .lesson-inner {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .lesson-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .lesson-number {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--amber);
+      opacity: 0.22;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .lesson-title-group { padding-top: 0.5rem; }
+
+    .lesson-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 0.4rem;
+    }
+
+    .lesson-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+
+    /* ── PULL QUOTE ── */
+    .pull-quote {
+      background: var(--bg-quote);
+      border-left: 4px solid var(--amber);
+      border-radius: 0 12px 12px 0;
+      padding: 2rem 2.5rem;
+      margin: 2.5rem 0;
+      position: relative;
+    }
+
+    .pull-quote::before {
+      content: '\201C';
+      position: absolute;
+      top: -0.5rem; left: 1.25rem;
+      font-family: var(--font-display);
+      font-size: 5rem;
+      font-weight: 800;
+      color: var(--amber);
+      opacity: 0.2;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .pull-quote-text {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 500;
+      line-height: 1.65;
+      font-style: italic;
+      color: var(--text);
+    }
+
+    .pull-quote-source {
+      margin-top: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      color: var(--amber-deep);
+      text-transform: uppercase;
+    }
+
+    /* ── PM BRIDGE ── */
+    .pm-bridge {
+      display: grid;
+      grid-template-columns: 3px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+      margin: 2rem 0;
+    }
+
+    .pm-bridge-line {
+      width: 3px;
+      background: var(--amber);
+      border-radius: 2px;
+      align-self: stretch;
+    }
+
+    .pm-bridge-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber-deep);
+      margin-bottom: 0.6rem;
+      font-weight: 600;
+    }
+
+    .pm-bridge-text {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--text);
+      max-width: 68ch;
+    }
+
+    .pm-bridge-text strong { font-weight: 600; }
+
+    /* ── IN PRACTICE ── */
+    .in-practice {
+      background: var(--amber-light);
+      border: 1px solid #F5D08A;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin-top: 1.75rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: start;
+    }
+
+    .in-practice-icon { width: 1rem; height: 1rem; margin-top: 2px; flex-shrink: 0; }
+
+    .in-practice-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber-deep);
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .in-practice-text {
+      font-size: 0.9rem;
+      color: var(--amber-deep);
+      line-height: 1.65;
+      max-width: 68ch;
+    }
+
+    /* ── DUAL QUOTE ── */
+    .dual-quote {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 2.5rem 0;
+    }
+
+    .mini-quote {
+      background: var(--bg-quote);
+      border: 1px solid rgba(181, 69, 27, 0.15);
+      border-radius: 10px;
+      padding: 1.5rem;
+    }
+
+    .mini-quote-text {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-style: italic;
+      line-height: 1.5;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+
+    .mini-quote-attr {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--amber-deep);
+    }
+
+    /* ── CLOSING ── */
+    .closing {
+      background: var(--amber-light);
+      border-top: 1px solid rgba(181, 69, 27, 0.15);
+      padding: 6rem 2rem;
+    }
+
+    .closing-inner {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .closing-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 2rem;
+    }
+
+    .closing h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 2rem;
+    }
+
+    .closing h2 em { font-style: normal; color: var(--amber); }
+
+    .closing-quote {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-style: italic;
+      line-height: 1.6;
+      color: var(--text-mid);
+      margin-bottom: 1rem;
+    }
+
+    .closing-attr {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber-deep);
+    }
+
+    /* ── REFLECTIONS ── */
+    .reflections {
+      padding: 5rem 2rem;
+      background: var(--bg-alt);
+    }
+
+    .reflections-inner {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .reflect-header { margin-bottom: 2.5rem; }
+
+    .reflect-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 0.75rem;
+    }
+
+    .reflect-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin-bottom: 0;
+    }
+
+    /* ── BEFORE / AFTER READING ── */
+    .reflect-block-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .reflect-before-callout {
+      background: var(--bg-quote);
+      border-left: 4px solid var(--amber);
+      border-radius: 0 10px 10px 0;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2.5rem;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text-mid);
+      font-style: italic;
+    }
+
+    .reflect-date-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 0.75rem;
+    }
+
+    .reflect-date {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+    }
+
+    .reflect-status {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      min-width: 5rem;
+      text-align: right;
+    }
+
+    .reflect-editor-wrap {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .ql-toolbar.ql-snow {
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 6px 14px;
+      background: #F3EDE3;
+    }
+
+    .ql-toolbar.ql-snow .ql-formats { margin-right: 10px; }
+
+    .ql-container.ql-snow {
+      border: none;
+      font-family: var(--font-body);
+      font-size: 1rem;
+    }
+
+    #reflect-editor {
+      min-height: 280px;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+
+    .ql-editor {
+      padding: 1.25rem 1.5rem;
+      line-height: 1.75;
+      color: var(--text);
+    }
+
+    .ql-editor.ql-blank::before {
+      color: var(--text-muted);
+      font-style: normal;
+      font-size: 0.95rem;
+    }
+
+    .ql-snow .ql-stroke { stroke: var(--text-mid); }
+    .ql-snow .ql-fill { fill: var(--text-mid); }
+    .ql-snow.ql-toolbar button:hover .ql-stroke,
+    .ql-snow.ql-toolbar button.ql-active .ql-stroke { stroke: var(--amber); }
+    .ql-snow.ql-toolbar button:hover .ql-fill,
+    .ql-snow.ql-toolbar button.ql-active .ql-fill { fill: var(--amber); }
+
+    .reflect-prompts { margin-bottom: 1rem; }
+
+    .prompt-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .prompt-chip {
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: var(--text-mid);
+      background: transparent;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: var(--font-body);
+      line-height: 1.4;
+    }
+
+    .prompt-chip:hover {
+      border-color: var(--amber);
+      color: var(--amber-deep);
+      background: var(--amber-light);
+    }
+
+    /* ── REDUCED MOTION ── */
+    @media (prefers-reduced-motion: reduce) {
+      .prompt-chip { transition: none; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .site-header { padding: 0 1rem; gap: 0.75rem; }
+      .header-title, .header-divider { display: none; }
+      .dual-quote { grid-template-columns: 1fr; }
+      .lesson-header { flex-direction: column; gap: 0.5rem; }
+      .lesson-number { font-size: 3.5rem; opacity: 0.15; }
+      .lesson { padding: 3rem 1.25rem; }
+      .hero { padding: 3rem 1.25rem 4rem; }
+      .pull-quote { padding: 1.75rem 1.5rem; }
+      .closing { padding: 4rem 1.25rem; }
+      .reflections { padding: 3rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── STICKY HEADER ── -->
+<header class="site-header">
+  <a class="back-link" href="../index.html">&#8592; Notebook</a>
+  <div class="header-divider"></div>
+  <span class="header-title">Claire Vo &times; <span>PM</span></span>
+  <div class="header-divider"></div>
+  <div class="progress-bar" id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Reading progress"></div>
+  <nav class="header-nav" aria-label="Lessons">
+    <div class="nav-dots">
+      <button class="nav-dot active" data-target="overview" aria-label="Overview"></button>
+      <button class="nav-dot" data-target="lesson-1" aria-label="01 Architecture"></button>
+      <button class="nav-dot" data-target="lesson-2" aria-label="02 Outcomes"></button>
+      <button class="nav-dot" data-target="lesson-3" aria-label="03 Management"></button>
+      <button class="nav-dot" data-target="lesson-4" aria-label="04 Trust"></button>
+      <button class="nav-dot" data-target="lesson-5" aria-label="05 Infrastructure"></button>
+      <button class="nav-dot" data-target="lesson-6" aria-label="06 Delegation"></button>
+      <button class="nav-dot" data-target="lesson-7" aria-label="07 Onboarding"></button>
+      <button class="nav-dot" data-target="reflect" aria-label="Reflect"></button>
+    </div>
+    <span class="nav-sep"></span>
+    <span class="nav-label">Overview</span>
+  </nav>
+</header>
+
+<div class="content">
+
+  <!-- HERO -->
+  <section id="overview">
+    <div class="hero">
+      <p class="hero-eyebrow">Podcast Recap &middot; For Product Managers</p>
+      <h1>7 lessons <em>Claire Vo</em><br>taught me about<br>managing agents.</h1>
+      <p class="hero-intro">The skills that make a great manager &mdash; role scoping, trust-building, onboarding, expectation-setting &mdash; transfer directly to managing AI agents. Claire Vo runs nine OpenClaw instances. Her secret isn&rsquo;t engineering. It&rsquo;s 20 years of management experience.</p>
+      <div class="hero-source">
+        <span class="hero-source-text"><a href="https://www.youtube.com/watch?v=DIa0MYJzM5I" target="_blank" rel="noopener">From skeptic to true believer: How OpenClaw changed my life | Claire Vo &rarr;</a></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 1 -->
+  <section id="lesson-1">
+    <div class="lesson">
+      <div class="lesson-inner">
+        <div class="lesson-header">
+          <div class="lesson-number">01</div>
+          <div class="lesson-title-group">
+            <div class="lesson-label">On Architecture</div>
+            <h2 class="lesson-title">One agent can&rsquo;t<br>do it all.</h2>
+          </div>
+        </div>
+        <div class="pull-quote">
+          <p class="pull-quote-text">Where people stumble with OpenClaw is they think they can throw any task at a single agent and get great results. And then they get really frustrated. I don&rsquo;t think anybody has really unlocked a general-purpose agent that handles everything well. The reason is simple: context overload. It&rsquo;s the same thing we&rsquo;ve seen in every LLM chat interface.</p>
+          <p class="pull-quote-source">Claire Vo &mdash; Lenny&rsquo;s Podcast</p>
+        </div>
+        <div class="pm-bridge">
+          <div class="pm-bridge-line"></div>
+          <div>
+            <div class="pm-bridge-label">The PM Translation</div>
+            <p class="pm-bridge-text">Claire runs nine agents, each scoped to one lane: Polly handles work, Finn handles family logistics, Sam does sales outreach, Howie preps podcast episodes. They don&rsquo;t cross streams. Her analogy is Slack channels &mdash; <strong>you wouldn&rsquo;t put all company communication in #general, so don&rsquo;t route all tasks to one agent.</strong> Context window is finite; specialized agents make better use of it. This is an architecture decision, not a technical one.</p>
+          </div>
+        </div>
+        <div class="in-practice">
+          <svg class="in-practice-icon" viewBox="0 0 24 24" fill="none" stroke="#A05000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <div>
+            <div class="in-practice-label">In Practice</div>
+            <p class="in-practice-text">Map your agent tasks like you&rsquo;d map Slack channels. What would you never post in #general? That&rsquo;s a separate agent. If you&rsquo;re building agent products: the question isn&rsquo;t &ldquo;how do we make one agent smarter&rdquo; &mdash; it&rsquo;s &ldquo;what lanes of work should never share context?&rdquo;</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 2 -->
+  <section id="lesson-2">
+    <div class="lesson lesson-alt">
+      <div class="lesson-inner">
+        <div class="lesson-header">
+          <div class="lesson-number">02</div>
+          <div class="lesson-title-group">
+            <div class="lesson-label">On Outcomes</div>
+            <h2 class="lesson-title">Make the user<br>look like a winner.</h2>
+          </div>
+        </div>
+        <div class="pull-quote">
+          <p class="pull-quote-text">The best way to success in B2B SaaS is getting somebody promoted and making them look good. I think about Howie &mdash; he just makes me look good every morning when I have a podcast episode to record. He sends me a reminder. It&rsquo;s like the most friendly reminder: &ldquo;Hey Claire, remember your meeting with Al. Just in case you forgot, here&rsquo;s who Al is. Here&rsquo;s all the stuff he&rsquo;s going to show.&rdquo;</p>
+          <p class="pull-quote-source">Claire Vo &mdash; Lenny&rsquo;s Podcast</p>
+        </div>
+        <div class="pm-bridge">
+          <div class="pm-bridge-line"></div>
+          <div>
+            <div class="pm-bridge-label">The PM Translation</div>
+            <p class="pm-bridge-text">This is the right north star for any agent UX you&rsquo;re building. Not &ldquo;complete the task&rdquo; &mdash; <strong>make the user feel like a winner after the interaction.</strong> Claire&rsquo;s agents don&rsquo;t just execute; they hype her up, flag the scheduling conflict before she misses it, draft the brief she didn&rsquo;t ask for. For any B2B PM building agent features: the moment isn&rsquo;t &ldquo;here&rsquo;s the output&rdquo; &mdash; it&rsquo;s &ldquo;here&rsquo;s the output, and here&rsquo;s why you look sharp for knowing this.&rdquo;</p>
+          </div>
+        </div>
+        <div class="in-practice">
+          <svg class="in-practice-icon" viewBox="0 0 24 24" fill="none" stroke="#A05000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <div>
+            <div class="in-practice-label">In Practice</div>
+            <p class="in-practice-text">Rewrite your agent&rsquo;s success metric as: &ldquo;Did the user feel more capable after this interaction?&rdquo; Audit your current agent outputs against that bar. If the output just completes the task but doesn&rsquo;t give the user a moment of &ldquo;I look good because of this,&rdquo; there&rsquo;s a UX gap.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 3 -->
+  <section id="lesson-3">
+    <div class="lesson">
+      <div class="lesson-inner">
+        <div class="lesson-header">
+          <div class="lesson-number">03</div>
+          <div class="lesson-title-group">
+            <div class="lesson-label">On Management</div>
+            <h2 class="lesson-title">Your management skills<br>transfer directly.</h2>
+          </div>
+        </div>
+        <div class="dual-quote">
+          <div class="mini-quote">
+            <p class="mini-quote-text">&ldquo;You don&rsquo;t need the technical skills. You need role scoping or design &mdash; how do we talk to customers, how do we talk to each other. The rest of it we can give to Claude Code to figure out.&rdquo;</p>
+            <p class="mini-quote-attr">Claire Vo</p>
+          </div>
+          <div class="mini-quote">
+            <p class="mini-quote-text">&ldquo;Managers, this is your moment. You can design your OpenClaw using the organizational skills you&rsquo;ve developed over your career. I know how to onboard an employee. I know how to give them a good role. I know how to set them up for success.&rdquo;</p>
+            <p class="mini-quote-attr">Claire Vo</p>
+          </div>
+        </div>
+        <div class="pm-bridge">
+          <div class="pm-bridge-line"></div>
+          <div>
+            <div class="pm-bridge-label">The PM Translation</div>
+            <p class="pm-bridge-text">Claire ran 20+ years of managing humans before managing agents &mdash; and she credits that, not engineering, for her success. The waterline model applies: <strong>if your agent keeps doing the wrong thing, it&rsquo;s a scoping or documentation failure, not a dumb AI.</strong> The same diagnostic applies to human teams. Define the job, give it the tools it needs, be explicit about what &ldquo;great&rdquo; looks like. Then hold it to that bar.</p>
+          </div>
+        </div>
+        <div class="in-practice">
+          <svg class="in-practice-icon" viewBox="0 0 24 24" fill="none" stroke="#A05000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <div>
+            <div class="in-practice-label">In Practice</div>
+            <p class="in-practice-text">Write your agent&rsquo;s job description like you&rsquo;d write a JD for a human hire: title, responsibilities, what &ldquo;great&rdquo; looks like, what&rsquo;s explicitly out of scope. Then check if your soul file or system prompt actually reflects that JD. Mismatch = root cause of most agent failures.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 4 -->
+  <section id="lesson-4">
+    <div class="lesson lesson-alt">
+      <div class="lesson-inner">
+        <div class="lesson-header">
+          <div class="lesson-number">04</div>
+          <div class="lesson-title-group">
+            <div class="lesson-label">On Trust</div>
+            <h2 class="lesson-title">Earn access.<br>Don&rsquo;t grant it.</h2>
+          </div>
+        </div>
+        <div class="pull-quote">
+          <p class="pull-quote-text">First you get my calendar, and then you can read my email, and then I guess you could draft some emails, and then you can send the emails. And then why don&rsquo;t you go to all my meetings for me. I&rsquo;m going on vacation. You don&rsquo;t onboard your EA by giving them the password to your email account. They have their own email, their own calendar, and you give them access or permission.</p>
+          <p class="pull-quote-source">Claire Vo &mdash; Lenny&rsquo;s Podcast</p>
+        </div>
+        <div class="pm-bridge">
+          <div class="pm-bridge-line"></div>
+          <div>
+            <div class="pm-bridge-label">The PM Translation</div>
+            <p class="pm-bridge-text">This isn&rsquo;t just a security posture &mdash; it&rsquo;s an onboarding design principle. <strong>Progressive permission flows aren&rsquo;t friction; they&rsquo;re trust scaffolding.</strong> For product builders: users who grant full agent access on day one are also the ones who abandon it after the first mistake. Design for graduated trust. Let the agent demonstrate competence at low-stakes tasks first. Expand scope after it&rsquo;s earned it.</p>
+          </div>
+        </div>
+        <div class="in-practice">
+          <svg class="in-practice-icon" viewBox="0 0 24 24" fill="none" stroke="#A05000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <div>
+            <div class="in-practice-label">In Practice</div>
+            <p class="in-practice-text">Audit your agent&rsquo;s current permission level. What is it doing that you&rsquo;ve never consciously approved? Design a &ldquo;trust level 2&rdquo; that would be meaningfully more useful and requires demonstrated reliability at level 1 first. Map the permission expansion curve before you build the feature.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 5 -->
+  <section id="lesson-5">
+    <div class="lesson">
+      <div class="lesson-inner">
+        <div class="lesson-header">
+          <div class="lesson-number">05</div>
+          <div class="lesson-title-group">
+            <div class="lesson-label">On Infrastructure</div>
+            <h2 class="lesson-title">API first.<br>Browser last.</h2>
+          </div>
+        </div>
+        <div class="pull-quote">
+          <p class="pull-quote-text">The open web has been so hardened against bots. There are all these bot-identifying mechanisms, all these hard walls. I just think the web is hostile to agents right now. And we&rsquo;re going to have to rethink what is the interface of the web to be more agent-friendly, because I think we skip ahead a couple of years and the number one user of websites are going to be people&rsquo;s agents.</p>
+          <p class="pull-quote-source">Claire Vo &mdash; Lenny&rsquo;s Podcast</p>
+        </div>
+        <div class="pm-bridge">
+          <div class="pm-bridge-line"></div>
+          <div>
+            <div class="pm-bridge-label">The PM Translation</div>
+            <p class="pm-bridge-text">Claire&rsquo;s hierarchy for any agent task: API &rarr; browser &rarr; find the problem behind the problem. <strong>Design agent integrations around stable API surfaces, not scraping.</strong> The DoorDash reframe she offers is the right PM instinct: if the agent can&rsquo;t order lunch, maybe it reminds you at 10:30 that you actually like eating at home. When a capability is blocked by the environment, ask whether you&rsquo;re solving the right problem or just the most obvious one.</p>
+          </div>
+        </div>
+        <div class="in-practice">
+          <svg class="in-practice-icon" viewBox="0 0 24 24" fill="none" stroke="#A05000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <div>
+            <div class="in-practice-label">In Practice</div>
+            <p class="in-practice-text">For every flaky agent integration in your product or personal stack, ask: is there an API for this? If yes, switch. If no, ask what problem the user actually has &mdash; and whether there&rsquo;s a framing of that problem that doesn&rsquo;t require browser use at all.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 6 -->
+  <section id="lesson-6">
+    <div class="lesson lesson-alt">
+      <div class="lesson-inner">
+        <div class="lesson-header">
+          <div class="lesson-number">06</div>
+          <div class="lesson-title-group">
+            <div class="lesson-label">On Delegation</div>
+            <h2 class="lesson-title">Let your agent<br>manage you.</h2>
+          </div>
+        </div>
+        <div class="pull-quote">
+          <p class="pull-quote-text">I have my agent assign me Linear tickets for things that I need to do &mdash; not that it needs to do. Then that&rsquo;s in my project management system and we all agree on due dates. So let your agent project-manage your tasks as well. And what I feel with the way I have set up my agents is it&rsquo;s not just a tool doing work for me. It is a team helping me look better to customers, helping me show up better to my family.</p>
+          <p class="pull-quote-source">Claire Vo &mdash; Lenny&rsquo;s Podcast</p>
+        </div>
+        <div class="pm-bridge">
+          <div class="pm-bridge-line"></div>
+          <div>
+            <div class="pm-bridge-label">The PM Translation</div>
+            <p class="pm-bridge-text">Most people think delegation ends at &ldquo;have the agent do it.&rdquo; Claire&rsquo;s insight is that for tasks requiring human action (make the call, sign the form, make the decision), a text reminder you&rsquo;ll ignore is not delegation. <strong>A ticket in your actual workflow with a real due date is delegation.</strong> The direction of project management flips: you&rsquo;re not managing the agent, the agent is managing you. That&rsquo;s the unlock.</p>
+          </div>
+        </div>
+        <div class="in-practice">
+          <svg class="in-practice-icon" viewBox="0 0 24 24" fill="none" stroke="#A05000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <div>
+            <div class="in-practice-label">In Practice</div>
+            <p class="in-practice-text">Pick one recurring human-action task your agent currently just reminds you about via message. Have it create a task in your actual PM system (Notion, Linear, wherever you actually work) with a due date instead. Notice whether the completion rate changes.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 7 + CLOSING -->
+  <section id="lesson-7">
+    <div class="lesson">
+      <div class="lesson-inner">
+        <div class="lesson-header">
+          <div class="lesson-number">07</div>
+          <div class="lesson-title-group">
+            <div class="lesson-label">On Onboarding</div>
+            <h2 class="lesson-title">Just ramble.<br>Seriously.</h2>
+          </div>
+        </div>
+        <div class="pull-quote">
+          <p class="pull-quote-text">The highest bandwidth API for an LLM is just chatting to it. Do it on your phone and do it in voice notes. When that agent asks you for the first time, &ldquo;who are you, what do you need?&rdquo; &mdash; click the voice thing and say: I&rsquo;m Claire, I run ChatPRD, I&rsquo;ve got this complicated life. You can just kind of ramble. And it actually makes sense of all that and gets you a really good outcome.</p>
+          <p class="pull-quote-source">Claire Vo &mdash; Lenny&rsquo;s Podcast</p>
+        </div>
+        <div class="pm-bridge">
+          <div class="pm-bridge-line"></div>
+          <div>
+            <div class="pm-bridge-label">The PM Translation</div>
+            <p class="pm-bridge-text">The instinct to write a perfect, structured system prompt is the wrong instinct for onboarding. <strong>High-bandwidth, messy natural language produces better results than a carefully engineered structured prompt</strong> &mdash; because it contains context the structured prompt would never think to include. For product design: your onboarding UX shouldn&rsquo;t force users into structured fields. The open-ended &ldquo;who are you and what do you need?&rdquo; approach OpenClaw uses is worth studying closely.</p>
+          </div>
+        </div>
+        <div class="in-practice">
+          <svg class="in-practice-icon" viewBox="0 0 24 24" fill="none" stroke="#A05000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <div>
+            <div class="in-practice-label">In Practice</div>
+            <p class="in-practice-text">The next time you set up or extend an agent, send a 2-minute voice note describing what you actually want instead of writing a system prompt. Then have the agent draft its own instructions from that. Compare the output to what you would have written yourself.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="closing" id="closing">
+      <div class="closing-inner">
+        <p class="closing-label">The Single Question</p>
+        <h2>What outcome makes<br>the user look <em>good?</em></h2>
+        <p class="closing-quote">&ldquo;What I feel with the way I have set up my open clause is it&rsquo;s not just a tool doing work for me. It is a team helping me look better to customers, helping me honestly show up better to my family. And that feels like a very positive experience.&rdquo;</p>
+        <p class="closing-attr">&mdash; Claire Vo, Lenny&rsquo;s Podcast</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- REFLECTIONS -->
+  <section id="reflect">
+    <div class="reflections">
+      <div class="reflections-inner">
+        <div class="reflect-header">
+          <p class="reflect-eyebrow">Personal Notes</p>
+          <h2 class="reflect-title">Your Reflections</h2>
+        </div>
+
+        <p class="reflect-block-label">Before reading</p>
+        <div class="reflect-before-callout">
+          she&rsquo;s a badass!!! so much golden nuggets in here &mdash; &ldquo;get the job done and make me look good&rdquo; is a nice takeaway to think about agents and how to delegate / what outcome to aim for; other takeaways are mostly tactical given this is more of a tactical session.
+        </div>
+
+        <p class="reflect-block-label">After reading</p>
+        <div class="reflect-prompts">
+          <div class="prompt-chips">
+            <button class="prompt-chip" data-prompt="The lesson that hit hardest was…">The lesson that hit hardest was…</button>
+            <button class="prompt-chip" data-prompt="The agent I want to build or improve next is…">The agent I want to build next is…</button>
+            <button class="prompt-chip" data-prompt="One thing I want to try at work this week:">One thing I want to try this week:</button>
+            <button class="prompt-chip" data-prompt="My current agent is failing because…">My current agent is failing because…</button>
+            <button class="prompt-chip" data-prompt="The job description for my ideal agent would be:">Job description for my ideal agent:</button>
+            <button class="prompt-chip" data-prompt="What outcome would make my user feel like a winner:">What makes my user feel like a winner:</button>
+          </div>
+        </div>
+
+        <div class="reflect-editor-wrap">
+          <div id="reflect-editor"></div>
+        </div>
+
+        <div class="reflect-date-row">
+          <span class="reflect-date" id="reflect-date"></span>
+          <span class="reflect-status" id="reflect-status"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
+<script>
+  // ── Reading progress bar ────────────────────────────────────
+  const progressBar = document.getElementById('progress-bar');
+
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const total = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = total > 0 ? Math.min(100, (scrolled / total) * 100) : 0;
+    progressBar.style.width = pct + '%';
+    progressBar.setAttribute('aria-valuenow', Math.round(pct));
+  }, { passive: true });
+
+  // ── Quill ────────────────────────────────────────────────────
+  const quill = new Quill('#reflect-editor', {
+    theme: 'snow',
+    placeholder: 'What else surfaced after reading?',
+    modules: {
+      toolbar: [
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        ['clean']
+      ]
+    }
+  });
+
+  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('reflect-date').textContent = today;
+
+  const storageKey = 'claire-vo-openclaw-reflect-' + new Date().toISOString().slice(0, 10);
+  const saved = localStorage.getItem(storageKey);
+  if (saved) quill.root.innerHTML = saved;
+
+  let saveTimer;
+  const statusEl = document.getElementById('reflect-status');
+
+  quill.on('text-change', () => {
+    clearTimeout(saveTimer);
+    statusEl.textContent = 'saving\u2026';
+    saveTimer = setTimeout(() => {
+      const content = quill.root.innerHTML;
+      if (content !== '<p><br></p>' && content !== '') {
+        localStorage.setItem(storageKey, content);
+        statusEl.textContent = 'saved';
+        setTimeout(() => { statusEl.textContent = ''; }, 2000);
+      } else {
+        statusEl.textContent = '';
+      }
+    }, 1500);
+  });
+
+  // Prompt chips
+  document.querySelectorAll('.prompt-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const text = chip.dataset.prompt;
+      const range = quill.getSelection(true);
+      const index = range ? range.index : quill.getLength() - 1;
+      if (index > 0 && quill.getText(index - 1, 1) !== '\n') {
+        quill.insertText(index, '\n');
+        quill.insertText(index + 1, text);
+        quill.setSelection(index + 1 + text.length);
+      } else {
+        quill.insertText(index, text);
+        quill.setSelection(index + text.length);
+      }
+      quill.focus();
+    });
+  });
+</script>
+<script src="notes-nav.js"></script>
+</body>
+</html>
