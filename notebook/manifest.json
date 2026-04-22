@@ -38,5 +38,15 @@
     "emoji": "🚀",
     "lessonCount": 7,
     "filename": "notes/2026-04-22-claire-vo-openclaw-pm-playbook.html"
+  },
+  {
+    "id": "2026-04-22-keith-rabois-founder-playbook",
+    "title": "6 lessons Keith Rabois taught me about building a company",
+    "source": "Hard truths about building in the AI era | Keith Rabois (Khosla Ventures)",
+    "persona": "founder",
+    "date": "2026-04-22",
+    "emoji": "💡",
+    "lessonCount": 6,
+    "filename": "notes/2026-04-22-keith-rabois-founder-playbook.html"
   }
 ]
