@@ -59,5 +59,15 @@
     "emoji": "🚀",
     "lessonCount": 6,
     "filename": "notes/2026-06-08-benedict-evans-ai-pm-playbook.html"
+  },
+  {
+    "id": "2026-07-30-mark-pincus-founder-playbook",
+    "title": "8 lessons Mark Pincus taught me about building products",
+    "source": "The hidden pattern behind successful products | Mark Pincus (FarmVille, Words with Friends, & more)",
+    "persona": "founder",
+    "date": "2026-07-30",
+    "emoji": "💡",
+    "lessonCount": 8,
+    "filename": "notes/2026-07-30-mark-pincus-founder-playbook.html"
   }
 ]
