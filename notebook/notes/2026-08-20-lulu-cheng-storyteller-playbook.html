@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7 lessons Lulu Cheng Meservey taught me about storytelling</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
+  <link rel="stylesheet" href="notes-nav.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #F7F3EC;
+      --bg-alt:       #EFE8DC;
+      --bg-quote:     #FAEEE9;
+      --text:         #18160F;
+      --text-mid:     #4A4139;
+      --text-muted:   #8C7E74;
+      --amber:        #B5451B;
+      --amber-light:  #FAE2D9;
+      --amber-deep:   #8B3213;
+      --border:       #DDD0BF;
+      --header-h:     52px;
+      --font-display: 'Bricolage Grotesque', Georgia, serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── STICKY HEADER ── */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-h);
+      background: rgba(247, 243, 236, 0.94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+      gap: 2rem;
+    }
+
+    .back-link {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--amber); }
+
+    .header-divider {
+      width: 1px;
+      height: 16px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-mid);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .header-title span { color: var(--amber); }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    .nav-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      border: none;
+      background: var(--border);
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.15s, transform 0.15s;
+      flex-shrink: 0;
+    }
+    .nav-dot:hover { background: var(--text-muted); }
+    .nav-dot.active { background: var(--amber); transform: scale(1.3); }
+
+    .nav-sep {
+      width: 1px; height: 12px;
+      background: var(--border);
+      margin: 0 0.5rem;
+    }
+
+    .nav-label {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      min-width: 120px;
+      transition: color 0.2s;
+    }
+
+    .progress-bar {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--amber);
+      transition: width 0.1s linear;
+      border-radius: 0 2px 2px 0;
+    }
+
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--amber);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    /* ── LAYOUT ── */
+    .content { padding-top: var(--header-h); }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 6rem 2rem 5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--amber);
+    }
+
+    .hero-source {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+    .hero-source a {
+      color: var(--text-muted);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.15s;
+    }
+    .hero-source a:hover { color: var(--amber); }
+
+    /* ── LESSON SECTIONS ── */
+    .lesson {
+      border-bottom: 1px solid var(--border);
+    }
+    .lesson:nth-child(even) { background: var(--bg-alt); }
+
+    .lesson-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .lesson-meta {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .lesson-num {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 8vw, 7rem);
+      font-weight: 800;
+      color: var(--border);
+      line-height: 1;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .lesson-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .lesson h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      margin-bottom: 2rem;
+    }
+
+    .pull-quote {
+      border-left: 4px solid var(--amber);
+      background: var(--bg-quote);
+      padding: 1.25rem 1.5rem;
+      margin: 0 0 2.5rem;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .pull-quote p {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.5;
+      color: var(--text);
+      font-style: italic;
+    }
+
+    .bridge-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 0.75rem;
+    }
+
+    .bridge-text {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--text-mid);
+      margin-bottom: 2rem;
+    }
+
+    .action-callout {
+      background: var(--amber-light);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .action-callout svg {
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .action-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--amber-deep);
+      margin-bottom: 0.35rem;
+    }
+
+    .action-text {
+      font-size: 0.97rem;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    /* ── CLOSING SECTION ── */
+    #closing {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .closing-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .closing-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 1.5rem;
+    }
+
+    .closing-question {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+
+    /* ── REFLECTIONS SECTION ── */
+    #reflect {
+      background: var(--bg-alt);
+    }
+
+    .reflect-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+    }
+
+    .reflect-section-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .reflect-block {
+      border-left: 4px solid var(--amber);
+      background: var(--bg-quote);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2.5rem;
+      border-radius: 0 6px 6px 0;
+      font-size: 1.0rem;
+      line-height: 1.7;
+      color: var(--text-mid);
+      font-style: italic;
+    }
+
+    .reflect-after-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .prompt-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .chip {
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      padding: 0.4rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--bg);
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
+      user-select: none;
+    }
+    .chip:hover {
+      border-color: var(--amber);
+      color: var(--amber);
+      background: var(--amber-light);
+    }
+
+    .quill-wrapper {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--bg);
+      margin-bottom: 1rem;
+    }
+
+    .ql-toolbar { border-bottom: 1px solid var(--border) !important; }
+    .ql-container { border: none !important; min-height: 120px; }
+    .ql-editor { font-family: var(--font-body); font-size: 1rem; color: var(--text); }
+    .ql-editor.ql-blank::before { color: var(--text-muted); font-style: normal; }
+
+    .reflect-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    .save-status { transition: color 0.3s; }
+    .save-status.saved { color: var(--amber); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../index.html" class="back-link">← Notebook</a>
+  <div class="header-divider"></div>
+  <div class="header-title">Lulu Cheng Meservey · <span>Storyteller Playbook</span></div>
+  <nav class="header-nav" aria-label="Section navigation">
+    <button class="nav-dot active" data-target="lesson-1" data-label="Narrative Sovereignty" title="Narrative Sovereignty"></button>
+    <button class="nav-dot" data-target="lesson-2" data-label="Anti-Template" title="Anti-Template"></button>
+    <button class="nav-dot" data-target="lesson-3" data-label="The Hero" title="The Hero"></button>
+    <button class="nav-dot" data-target="lesson-4" data-label="The Manifesto" title="The Manifesto"></button>
+    <button class="nav-dot" data-target="lesson-5" data-label="Go Direct" title="Go Direct"></button>
+    <button class="nav-dot" data-target="lesson-6" data-label="Real vs. Fake" title="Real vs. Fake"></button>
+    <button class="nav-dot" data-target="lesson-7" data-label="Narrative Vacuum" title="Narrative Vacuum"></button>
+    <button class="nav-dot" data-target="closing" data-label="The Question" title="The Question"></button>
+    <button class="nav-dot" data-target="reflect" data-label="Reflections" title="Reflections"></button>
+    <div class="nav-sep"></div>
+    <span class="nav-label" id="nav-label-text">Narrative Sovereignty</span>
+  </nav>
+  <div class="progress-bar" id="progress-bar"></div>
+</header>
+
+<main class="content">
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <p class="hero-eyebrow">Podcast Recap · Founder &amp; Storyteller Lens</p>
+    <h1>7 lessons <em>Lulu Cheng Meservey</em> taught me about storytelling</h1>
+    <p class="hero-source">
+      <a href="https://www.youtube.com/watch?v=DFImJfJGXl0" target="_blank" rel="noopener">The Comms Strategist Behind Anduril, Shopify &amp; Cognition | Lulu Cheng Meservey →</a>
+    </p>
+  </section>
+
+  <!-- LESSON 1 -->
+  <section class="lesson" id="lesson-1">
+    <div class="lesson-inner">
+      <div class="lesson-meta">
+        <span class="lesson-num">01</span>
+        <span class="lesson-label">On Ownership</span>
+      </div>
+      <h2>Narrative Sovereignty</h2>
+      <blockquote class="pull-quote">
+        <p>"We should be in control of our narrative destinies and the stories that help us achieve the destiny. This is narrative sovereignty. You never just want to be dependent on someone else."</p>
+      </blockquote>
+      <p class="bridge-label">The Founder &amp; Storyteller Lens</p>
+      <p class="bridge-text">Your MBA clients are about to enter a world where their story will be told <em>by</em> recruiters, alumni networks, LinkedIn algorithms, and hiring managers — all filtering through their own prism. If your clients don't own and actively shape their narrative, someone else will do it for them, poorly. As a coach who tells her own story publicly, this also means: your story on social media isn't marketing — it's your manifesto. It's how you demonstrate the very thing you teach.</p>
+      <div class="action-callout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 1L10.09 5.26L14.82 5.97L11.41 9.29L12.18 14L8 11.77L3.82 14L4.59 9.29L1.18 5.97L5.91 5.26L8 1Z" fill="#B5451B"/>
+        </svg>
+        <div>
+          <p class="action-label">Try This</p>
+          <p class="action-text">For each MBA client, ask: "If you went silent for six months, what story would others tell about you based on the signals you're already putting out?" Use that gap between their intended story and their default story as the starting brief for your work together.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 2 -->
+  <section class="lesson" id="lesson-2">
+    <div class="lesson-inner">
+      <div class="lesson-meta">
+        <span class="lesson-num">02</span>
+        <span class="lesson-label">On Originality</span>
+      </div>
+      <h2>The Anti-Template</h2>
+      <blockquote class="pull-quote">
+        <p>"The alpha comes from the little cracks in reality that only you can see and that you can exploit. If you are just plastering over that with a templated version of something else, you are sacrificing the opportunity to be better."</p>
+      </blockquote>
+      <blockquote class="pull-quote">
+        <p>"Ralph Waldo Emerson calls it a form of suicide because in imitating others, you are killing your own ideas."</p>
+      </blockquote>
+      <p class="bridge-label">The Founder &amp; Storyteller Lens</p>
+      <p class="bridge-text">Every MBA candidate you coach will be tempted to use the "tell me about yourself" framework they learned in a career center workshop — the STAR method, the passion-pivot-proof LinkedIn structure. But those templates are the enemy of distinctiveness, and in a cohort of 200+ people applying to the same roles, distinctiveness is the only currency that matters. Your coaching creates alpha by treating every client as a unique case study rather than a personality type to be mapped onto an archetype.</p>
+      <div class="action-callout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 1L10.09 5.26L14.82 5.97L11.41 9.29L12.18 14L8 11.77L3.82 14L4.59 9.29L1.18 5.97L5.91 5.26L8 1Z" fill="#B5451B"/>
+        </svg>
+        <div>
+          <p class="action-label">Try This</p>
+          <p class="action-text">In your next intake session, explicitly ban the three most common MBA narrative templates ("I've always been passionate about X," "I made an impact at Y by doing Z," "Now I want to leverage my background in..."). Force your client to describe their story in their own unscripted words, then find the crack in that raw material that no template would have surfaced.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 3 -->
+  <section class="lesson" id="lesson-3">
+    <div class="lesson-inner">
+      <div class="lesson-meta">
+        <span class="lesson-num">03</span>
+        <span class="lesson-label">On Audience</span>
+      </div>
+      <h2>The Hero Is the Listener</h2>
+      <blockquote class="pull-quote">
+        <p>"At the center of his story, the protagonist wasn't the human and it wasn't the person he was speaking to. He wasn't saying, 'You can go change the world.' Instead, he said the technology is coming whether you like it or not — you are potentially in its way."</p>
+      </blockquote>
+      <blockquote class="pull-quote">
+        <p>"The Jetsons are the hero of the story. It is not called 'show about robots.' The human story is the hero and the technology is ambient."</p>
+      </blockquote>
+      <p class="bridge-label">The Founder &amp; Storyteller Lens</p>
+      <p class="bridge-text">This is the single most practical storytelling principle for your MBA clients' social media presence: you are not the protagonist of your own LinkedIn post. Your reader is. A post about "what I learned during my summer internship" that never acknowledges what the reader can take from it is the Eric Schmidt commencement address — technically correct, emotionally empty. When your clients make their reader the hero (this is what's possible for you, this is what this pattern means for your career), the content stops feeling like self-promotion and starts feeling like a gift.</p>
+      <div class="action-callout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 1L10.09 5.26L14.82 5.97L11.41 9.29L12.18 14L8 11.77L3.82 14L4.59 9.29L1.18 5.97L5.91 5.26L8 1Z" fill="#B5451B"/>
+        </svg>
+        <div>
+          <p class="action-label">Try This</p>
+          <p class="action-text">Run a "hero audit" on your client's last three LinkedIn posts. For each one, ask: who is the protagonist — you or the reader? Rewrite one sentence in each post to reframe the takeaway as something the reader walks away with, not something the client demonstrates.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 4 -->
+  <section class="lesson" id="lesson-4">
+    <div class="lesson-inner">
+      <div class="lesson-meta">
+        <span class="lesson-num">04</span>
+        <span class="lesson-label">On Conviction</span>
+      </div>
+      <h2>The Manifesto and Intensity</h2>
+      <blockquote class="pull-quote">
+        <p>"A good manifesto looks at the world and says, the people we're fighting have more numbers, money, force, and legitimacy than us. But we are going to beat all of that with more intensity. Intensity can overcome everything."</p>
+      </blockquote>
+      <blockquote class="pull-quote">
+        <p>"The person in the middle has to be the most convicted, the most passionate, and have the clearest idea of the promised land."</p>
+      </blockquote>
+      <p class="bridge-label">The Founder &amp; Storyteller Lens</p>
+      <p class="bridge-text">Your clients are entering recruiting as underdogs — no track record, no brand, often no network at the school they're targeting. The only asymmetric advantage available to them is intensity of conviction. A candidate who has clearly wrestled with what they believe, what they're fighting for, and why they are the one person who should be doing it will outperform a polished but generic candidate every single time. Your job as a coach is to help them find and name that intensity — not manufacture enthusiasm, but excavate the real thing.</p>
+      <div class="action-callout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 1L10.09 5.26L14.82 5.97L11.41 9.29L12.18 14L8 11.77L3.82 14L4.59 9.29L1.18 5.97L5.91 5.26L8 1Z" fill="#B5451B"/>
+        </svg>
+        <div>
+          <p class="action-label">Try This</p>
+          <p class="action-text">Ask each client: "What is the thing you would do even if nobody paid you, nobody promoted you, and nobody praised you for it?" That answer is their manifesto. Write it down. Test every piece of their narrative against it — does this detail serve the manifesto or dilute it?</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 5 -->
+  <section class="lesson" id="lesson-5">
+    <div class="lesson-inner">
+      <div class="lesson-meta">
+        <span class="lesson-num">05</span>
+        <span class="lesson-label">On Distribution</span>
+      </div>
+      <h2>Go Direct</h2>
+      <blockquote class="pull-quote">
+        <p>"If you're doing something unconventional, far outside the mainstream, you do not want this to be filtered through somebody else's prism. You lose the intensity along the way because it becomes watered down."</p>
+      </blockquote>
+      <blockquote class="pull-quote">
+        <p>"You and I both care about a shockingly small number of people's opinions. And these are people that are like a text message away."</p>
+      </blockquote>
+      <p class="bridge-label">The Founder &amp; Storyteller Lens</p>
+      <p class="bridge-text">For MBA candidates, "going direct" means identifying the 5–10 specific people whose opinion of them actually determines their outcome — a partner at the firm, an alum in the group, a hiring manager — and communicating directly with them in the places those people actually pay attention, rather than optimizing for the general LinkedIn feed. For you as a coach building your own public presence: you don't need a huge following. You need the right 50 people to see your work and feel like it's speaking to them.</p>
+      <div class="action-callout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 1L10.09 5.26L14.82 5.97L11.41 9.29L12.18 14L8 11.77L3.82 14L4.59 9.29L1.18 5.97L5.91 5.26L8 1Z" fill="#B5451B"/>
+        </svg>
+        <div>
+          <p class="action-label">Try This</p>
+          <p class="action-text">Help each client build a "decision-maker map" — the actual 5–10 people who will determine their outcomes this recruiting cycle. For each person: where do they pay attention (Twitter/X, LinkedIn, podcasts, specific alumni events), and how does your client get in front of them directly rather than through a generalized application funnel?</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 6 -->
+  <section class="lesson" id="lesson-6">
+    <div class="lesson-inner">
+      <div class="lesson-meta">
+        <span class="lesson-num">06</span>
+        <span class="lesson-label">On Authenticity</span>
+      </div>
+      <h2>Real vs. Fake (The Beauty Test)</h2>
+      <blockquote class="pull-quote">
+        <p>"When that happens, I write off the entire company as fake. I don't think this was fake engagement. I think to myself, it's a fake company with a fake founder."</p>
+      </blockquote>
+      <blockquote class="pull-quote">
+        <p>"Fake things are not beautiful... Beauty is a stamp of authenticity."</p>
+      </blockquote>
+      <p class="bridge-label">The Founder &amp; Storyteller Lens</p>
+      <p class="bridge-text">LinkedIn is full of MBA candidate content assembled from a checklist — the "excited to announce" opener, the three-bullet lesson format, the humble-brag closer. Sophisticated readers — the exact recruiters and operators your clients want to reach — can spot it instantly. Lulu's insight is that real things are beautiful because someone put love into them; fake things are orphans. Your coaching's differentiator is helping clients produce content that is undeniably theirs — with a specific point of view, a real opinion, an original observation — because that's the only content that passes the beauty test.</p>
+      <div class="action-callout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 1L10.09 5.26L14.82 5.97L11.41 9.29L12.18 14L8 11.77L3.82 14L4.59 9.29L1.18 5.97L5.91 5.26L8 1Z" fill="#B5451B"/>
+        </svg>
+        <div>
+          <p class="action-label">Try This</p>
+          <p class="action-text">Introduce "the stranger test" in your coaching: would a complete stranger, reading this post with no context about who wrote it, be able to tell it came from this specific person and no one else? If the answer is no, it needs another pass.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 7 -->
+  <section class="lesson" id="lesson-7">
+    <div class="lesson-inner">
+      <div class="lesson-meta">
+        <span class="lesson-num">07</span>
+        <span class="lesson-label">On Control</span>
+      </div>
+      <h2>Fill the Narrative Vacuum</h2>
+      <blockquote class="pull-quote">
+        <p>"We all have a form of referential mania. We need to believe that things around us are pointing to something. And if we're not told what that is, we will try to fill it in ourselves because our brains crave a story."</p>
+      </blockquote>
+      <blockquote class="pull-quote">
+        <p>"It's the space in between the facts that ties them into a story — that is our responsibility to fill in. Because if you let people fill it in haphazardly, they might end up with any conclusion that you don't control."</p>
+      </blockquote>
+      <p class="bridge-label">The Founder &amp; Storyteller Lens</p>
+      <p class="bridge-text">Every MBA candidate has a series of facts — school, company, role, project — that recruiters and interviewers will read before they ever meet them. Those facts create a narrative vacuum, and every reader will fill it in. The question is whether your client fills it in first, deliberately, or lets the reader make assumptions. A gap year, a nonlinear career path, a pivot from one industry to another — these all look like red flags if left unfilled, and like intentional moves if your client gets there first with a coherent throughline.</p>
+      <div class="action-callout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 1L10.09 5.26L14.82 5.97L11.41 9.29L12.18 14L8 11.77L3.82 14L4.59 9.29L1.18 5.97L5.91 5.26L8 1Z" fill="#B5451B"/>
+        </svg>
+        <div>
+          <p class="action-label">Try This</p>
+          <p class="action-text">Map your client's resume as a "facts list" — strip out all interpretation and just list the raw data points. Then ask: "If a skeptical reader saw only these facts, what story would they construct? Is that the story you want told?" The gap between those two answers is exactly the work you do together.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section id="closing">
+    <div class="closing-inner">
+      <p class="closing-eyebrow">The Single Question</p>
+      <p class="closing-question">If the hero of your story must always be the person listening — then who are you actually writing for, and does everything you put out reflect that?</p>
+    </div>
+  </section>
+
+  <!-- REFLECTIONS -->
+  <section id="reflect">
+    <div class="reflect-inner">
+      <p class="reflect-section-label">Before reading</p>
+      <div class="reflect-block">
+        She never uses templates — every company gets a fresh story, and that's where the alpha lives. Mission-driven: good tech exists but needs good story to break through the noise. The hero of the story must be the listener, not the speaker. Eric Schmidt's AI-displacing-jobs speech at a college campus was the anti-example — no empathy, no empowerment, just implicit "you're screwed and I'll be fine." She is a compelling storyteller herself, and I want to build that same skill.
+      </div>
+
+      <p class="reflect-after-label">After reading</p>
+      <div class="prompt-chips">
+        <button class="chip" onclick="insertChip(this)">What surprised me most</button>
+        <button class="chip" onclick="insertChip(this)">What I want to try first</button>
+        <button class="chip" onclick="insertChip(this)">Where I pushed back</button>
+        <button class="chip" onclick="insertChip(this)">What this changes for my coaching</button>
+      </div>
+      <div class="quill-wrapper">
+        <div id="editor"></div>
+      </div>
+      <div class="reflect-footer">
+        <span id="save-status" class="save-status">Auto-saved</span>
+        <span id="reflect-date"></span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
+<script>
+  // ── READING PROGRESS ──
+  const progressBar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = (docHeight > 0 ? (scrollTop / docHeight) * 100 : 0) + '%';
+  });
+
+  // ── DOT NAV ──
+  const dots = document.querySelectorAll('.nav-dot');
+  const navLabel = document.getElementById('nav-label-text');
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const target = document.getElementById(dot.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  const sections = ['lesson-1','lesson-2','lesson-3','lesson-4','lesson-5','lesson-6','lesson-7','closing','reflect'];
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = sections.indexOf(entry.target.id);
+        if (idx >= 0 && dots[idx]) {
+          dots.forEach(d => d.classList.remove('active'));
+          dots[idx].classList.add('active');
+          navLabel.textContent = dots[idx].dataset.label;
+        }
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+
+  // ── QUILL EDITOR ──
+  const STORAGE_KEY = 'reflect-lulu-cheng-storyteller-2026-08-20';
+  const quill = new Quill('#editor', {
+    theme: 'snow',
+    placeholder: 'What else surfaced after reading?',
+    modules: { toolbar: [['bold','italic','underline'],['blockquote'],['clean']] }
+  });
+
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try { quill.setContents(JSON.parse(saved)); } catch(e) {}
+  }
+
+  const statusEl = document.getElementById('save-status');
+  let saveTimer;
+  quill.on('text-change', () => {
+    clearTimeout(saveTimer);
+    statusEl.textContent = 'Saving…';
+    statusEl.classList.remove('saved');
+    saveTimer = setTimeout(() => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(quill.getContents()));
+      statusEl.textContent = 'Saved';
+      statusEl.classList.add('saved');
+    }, 800);
+  });
+
+  const dateEl = document.getElementById('reflect-date');
+  dateEl.textContent = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+  function insertChip(btn) {
+    const text = btn.textContent + ': ';
+    const range = quill.getSelection(true);
+    quill.insertText(range ? range.index : quill.getLength(), text);
+    quill.focus();
+  }
+</script>
+</body>
+</html>

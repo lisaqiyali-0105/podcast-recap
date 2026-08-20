@@ -48,8 +48,7 @@
     "emoji": "💡",
     "lessonCount": 6,
     "filename": "notes/2026-04-22-keith-rabois-founder-playbook.html"
-  }
-,
+  },
   {
     "id": "2026-06-08-benedict-evans-ai-pm-playbook",
     "title": "6 lessons Benedict Evans taught me about AI",
@@ -69,5 +68,15 @@
     "emoji": "💡",
     "lessonCount": 8,
     "filename": "notes/2026-07-30-mark-pincus-founder-playbook.html"
+  },
+  {
+    "id": "2026-08-20-lulu-cheng-storyteller-playbook",
+    "title": "7 lessons Lulu Cheng Meservey taught me about storytelling",
+    "source": "The Comms Strategist Behind Anduril, Shopify & Cognition | Lulu Cheng Meservey",
+    "persona": "founder",
+    "date": "2026-08-20",
+    "emoji": "💡",
+    "lessonCount": 7,
+    "filename": "notes/2026-08-20-lulu-cheng-storyteller-playbook.html"
   }
 ]
