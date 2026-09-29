@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6 lessons Rogo taught me about winning deal workflow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.snow.css" rel="stylesheet">
+  <link rel="stylesheet" href="notes-nav.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #F7F3EC;
+      --bg-alt:       #EFE8DC;
+      --bg-quote:     #FAEEE9;
+      --text:         #18160F;
+      --text-mid:     #4A4139;
+      --text-muted:   #8C7E74;
+      --amber:        #B5451B;
+      --amber-light:  #FAE2D9;
+      --amber-deep:   #8B3213;
+      --border:       #DDD0BF;
+      --header-h:     52px;
+      --font-display: 'Bricolage Grotesque', Georgia, serif;
+      --font-body:    'DM Sans', system-ui, sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
+    }
+
+    body { font-family: var(--font-body); background: var(--bg); color: var(--text); font-size: 1rem; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+    .site-header {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--header-h);
+      background: rgba(247,243,236,0.94); backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--border);
+      z-index: 100; display: flex; align-items: center; padding: 0 2rem; gap: 2rem;
+    }
+    .back-link { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; flex-shrink: 0; transition: color 0.15s; }
+    .back-link:hover { color: var(--amber); }
+    .header-divider { width: 1px; height: 16px; background: var(--border); flex-shrink: 0; }
+    .header-title { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-mid); white-space: nowrap; flex-shrink: 0; }
+    .header-title span { color: var(--amber); }
+    .header-nav { display: flex; align-items: center; gap: 0.25rem; margin-left: auto; flex-shrink: 0; }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; border: none; background: var(--border); cursor: pointer; padding: 0; transition: background 0.15s, transform 0.15s; flex-shrink: 0; }
+    .nav-dot:hover { background: var(--text-muted); }
+    .nav-dot.active { background: var(--amber); transform: scale(1.3); }
+    .nav-sep { width: 1px; height: 12px; background: var(--border); margin: 0 0.5rem; }
+    .nav-label { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); min-width: 140px; transition: color 0.2s; }
+    .progress-bar { position: absolute; bottom: 0; left: 0; height: 2px; width: 0%; background: var(--amber); transition: width 0.1s linear; border-radius: 0 2px 2px 0; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 4px; }
+
+    .content { padding-top: var(--header-h); }
+
+    .hero { max-width: 780px; margin: 0 auto; padding: 6rem 2rem 5rem; border-bottom: 1px solid var(--border); }
+    .hero-eyebrow { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); margin-bottom: 1.5rem; }
+    .hero h1 { font-family: var(--font-display); font-size: clamp(3rem, 6vw, 5rem); font-weight: 800; line-height: 1.0; letter-spacing: -0.02em; color: var(--text); margin-bottom: 2rem; }
+    .hero h1 em { font-style: normal; color: var(--amber); }
+    .hero-source { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.06em; color: var(--text-muted); }
+    .hero-source a { color: var(--text-muted); text-decoration: underline; text-underline-offset: 3px; transition: color 0.15s; }
+    .hero-source a:hover { color: var(--amber); }
+
+    .lesson { border-bottom: 1px solid var(--border); }
+    .lesson:nth-child(even) { background: var(--bg-alt); }
+    .lesson-inner { max-width: 780px; margin: 0 auto; padding: 5rem 2rem; }
+    .lesson-meta { display: flex; align-items: baseline; gap: 1.5rem; margin-bottom: 2rem; }
+    .lesson-num { font-family: var(--font-display); font-size: clamp(4rem, 8vw, 7rem); font-weight: 800; color: var(--border); line-height: 1; flex-shrink: 0; user-select: none; }
+    .lesson-label { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+    .lesson h2 { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; margin-bottom: 2rem; }
+    .pull-quote { border-left: 4px solid var(--amber); background: var(--bg-quote); padding: 1.25rem 1.5rem; margin: 0 0 2.5rem; border-radius: 0 6px 6px 0; }
+    .pull-quote p { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; line-height: 1.5; color: var(--text); font-style: italic; }
+    .bridge-label { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); margin-bottom: 0.75rem; }
+    .bridge-text { font-size: 1.05rem; line-height: 1.75; color: var(--text-mid); margin-bottom: 2rem; }
+    .action-callout { background: var(--amber-light); border-radius: 8px; padding: 1.25rem 1.5rem; display: flex; gap: 1rem; align-items: flex-start; }
+    .action-callout svg { flex-shrink: 0; margin-top: 2px; }
+    .action-label { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber-deep); margin-bottom: 0.35rem; }
+    .action-text { font-size: 0.97rem; line-height: 1.65; color: var(--text); }
+
+    #closing { background: var(--bg); border-bottom: 1px solid var(--border); }
+    .closing-inner { max-width: 780px; margin: 0 auto; padding: 5rem 2rem; }
+    .closing-eyebrow { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); margin-bottom: 1.5rem; }
+    .closing-question { font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; line-height: 1.25; letter-spacing: -0.01em; color: var(--text); }
+
+    #reflect { background: var(--bg-alt); }
+    .reflect-inner { max-width: 780px; margin: 0 auto; padding: 5rem 2rem; }
+    .reflect-section-label { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .reflect-block { border-left: 4px solid var(--amber); background: var(--bg-quote); padding: 1.25rem 1.5rem; margin-bottom: 2.5rem; border-radius: 0 6px 6px 0; font-size: 1.0rem; line-height: 1.7; color: var(--text-mid); font-style: italic; }
+    .reflect-after-label { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 1rem; }
+    .prompt-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .chip { font-family: var(--font-body); font-size: 0.85rem; padding: 0.4rem 0.9rem; border: 1px solid var(--border); border-radius: 999px; background: var(--bg); color: var(--text-mid); cursor: pointer; transition: border-color 0.15s, color 0.15s, background 0.15s; user-select: none; }
+    .chip:hover { border-color: var(--amber); color: var(--amber); background: var(--amber-light); }
+    .quill-wrapper { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: var(--bg); margin-bottom: 1rem; }
+    .ql-toolbar { border-bottom: 1px solid var(--border) !important; }
+    .ql-container { border: none !important; min-height: 120px; }
+    .ql-editor { font-family: var(--font-body); font-size: 1rem; color: var(--text); }
+    .ql-editor.ql-blank::before { color: var(--text-muted); font-style: normal; }
+    .reflect-footer { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.06em; color: var(--text-muted); }
+    .save-status { transition: color 0.3s; }
+    .save-status.saved { color: var(--amber); }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="../index.html" class="back-link">← Notebook</a>
+  <div class="header-divider"></div>
+  <div class="header-title">Rogo · <span>AlphaSense PM Lens</span></div>
+  <nav class="header-nav" aria-label="Section navigation">
+    <button class="nav-dot active" data-target="lesson-1" data-label="The Exchange Endgame" title="The Exchange Endgame"></button>
+    <button class="nav-dot" data-target="lesson-2" data-label="Coordination Moat" title="Coordination Moat"></button>
+    <button class="nav-dot" data-target="lesson-3" data-label="Compliance Wedge" title="Compliance Wedge"></button>
+    <button class="nav-dot" data-target="lesson-4" data-label="The Harness" title="The Harness"></button>
+    <button class="nav-dot" data-target="lesson-5" data-label="Company Brain" title="Company Brain"></button>
+    <button class="nav-dot" data-target="lesson-6" data-label="Go Deeper" title="Go Deeper"></button>
+    <button class="nav-dot" data-target="closing" data-label="The Question" title="The Question"></button>
+    <button class="nav-dot" data-target="reflect" data-label="Reflections" title="Reflections"></button>
+    <div class="nav-sep"></div>
+    <span class="nav-label" id="nav-label-text">The Exchange Endgame</span>
+  </nav>
+  <div class="progress-bar" id="progress-bar"></div>
+</header>
+
+<main class="content">
+
+  <section class="hero" id="hero">
+    <p class="hero-eyebrow">Podcast Recap · AlphaSense PM Lens</p>
+    <h1>6 lessons <em>Rogo</em> taught me about winning deal workflow</h1>
+    <p class="hero-source">
+      <a href="https://www.youtube.com/watch?v=B0illwrqUG0" target="_blank" rel="noopener">Why OpenAI and Anthropic Won't Win Finance | Gabe Stengel on Invest Like the Best →</a>
+    </p>
+  </section>
+
+  <!-- LESSON 1 -->
+  <section class="lesson" id="lesson-1">
+    <div class="lesson-inner">
+      <div class="lesson-meta">
+        <span class="lesson-num">01</span>
+        <span class="lesson-label">On Endgame</span>
+      </div>
+      <h2>The Endgame Is an Exchange, Not a Workspace</h2>
+      <blockquote class="pull-quote">
+        <p>"If you actually want to be the exchange for all of high finance and all of capital markets, you not just need to own the intelligence. You need to own the transaction venue, the communication venue, the workflows and all the data inputs that go into it."</p>
+      </blockquote>
+      <blockquote class="pull-quote">
+        <p>"It's actually a very similar strategy to Bloomberg's strategy. Use a little bit of AI to get in the door, build out the full workflows… and then provide the communication channel between counterparties so that if I have agents that can autopilot do the work, I can actually transact for you."</p>
+      </blockquote>
+      <p class="bridge-label">The AlphaSense PM Lens</p>
+      <p class="bridge-text">Rogo isn't trying to beat AlphaSense at search or intelligence — they're trying to become the Bloomberg of private markets. If they succeed, DD Workspace becomes a feature inside someone else's platform. AlphaSense's counter-positioning can't just be "better AI" — it has to be "we already own the intelligence layer, and Rogo still has to build that from scratch." The clock on locking in deal workflow incumbency is running now.</p>
+      <div class="action-callout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L10.09 5.26L14.82 5.97L11.41 9.29L12.18 14L8 11.77L3.82 14L4.59 9.29L1.18 5.97L5.91 5.26L8 1Z" fill="#B5451B"/></svg>
+        <div>
+          <p class="action-label">In Practice</p>
+          <p class="action-text">Map Rogo's announced surface area (data room, DDQ, CRM sync, LP updates, counterparty comms) against DD Workspace's current roadmap. Identify the one workflow wedge where AlphaSense can credibly own end-to-end execution before Rogo does — and make that the Q4 bet.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 2 -->
+  <section class="lesson" id="lesson-2">
+    <div class="lesson-inner">
+      <div class="lesson-meta">
+        <span class="lesson-num">02</span>
+        <span class="lesson-label">On Automation</span>
+      </div>
+      <h2>Coordination Work Is the Automatable Moat</h2>
+      <blockquote class="pull-quote">
+        <p>"A lot of what we do is both make people smarter, but actually do the deal making. How do you prepare a data room? How do you unpack a data room? How do you coordinate the call with the third parties to discuss the data room? How do you go through all of the initial steps through closing of a deal?"</p>
+      </blockquote>
+      <blockquote class="pull-quote">
+        <p>"Half of our surface area is actually the underneath of the iceberg of interacting with these different systems of record based on what the humans are doing over the course of the deal."</p>
+      </blockquote>
+      <p class="bridge-label">The AlphaSense PM Lens</p>
+      <p class="bridge-text">The current DD Workspace product is mostly intelligence retrieval — making people smarter about a company. Rogo is building below that: the coordination layer. VDR unpacking, DDQ auto-response, handoffs to legal and QoE — these are the workflows where humans don't want to spend time and where switching costs accrue. AlphaSense has the content to power these; the gap is the workflow orchestration layer that executes on that content.</p>
+      <div class="action-callout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L10.09 5.26L14.82 5.97L11.41 9.29L12.18 14L8 11.77L3.82 14L4.59 9.29L1.18 5.97L5.91 5.26L8 1Z" fill="#B5451B"/></svg>
+        <div>
+          <p class="action-label">In Practice</p>
+          <p class="action-text">Interview 3 active PE deal teams this quarter and map every coordination touchpoint in a live deal — from NDA to IC memo. Find the one handoff that costs the most time and has zero AI coverage today. That's the beachhead for DD Workspace's workflow expansion.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 3 -->
+  <section class="lesson" id="lesson-3">
+    <div class="lesson-inner">
+      <div class="lesson-meta">
+        <span class="lesson-num">03</span>
+        <span class="lesson-label">On Moats</span>
+      </div>
+      <h2>Compliance and Auditability Are the Wedge Against the Labs</h2>
+      <blockquote class="pull-quote">
+        <p>"For Anthropic, that would kind of be like stopping on the side of the road to pick up a penny because they're on the pathway of trying to go from a hundred billion in revenue to a trillion in revenue."</p>
+      </blockquote>
+      <blockquote class="pull-quote">
+        <p>"If you can't explain why you made a decision and the data went in, that's not going to fly."</p>
+      </blockquote>
+      <p class="bridge-label">The AlphaSense PM Lens</p>
+      <p class="bridge-text">This is AlphaSense's most under-used competitive argument. AlphaSense has been building compliance-first for enterprise finance for years — data provenance, source citation, permissioned access. Every claim the AI makes in DD Workspace is traceable back to a primary source. That's not just a sales point — it's a product requirement for any bank where MNPI leakage triggers a nine-figure fine. Lead with this in every deal, especially against Rogo, which has to build that credibility from scratch.</p>
+      <div class="action-callout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L10.09 5.26L14.82 5.97L11.41 9.29L12.18 14L8 11.77L3.82 14L4.59 9.29L1.18 5.97L5.91 5.26L8 1Z" fill="#B5451B"/></svg>
+        <div>
+          <p class="action-label">In Practice</p>
+          <p class="action-text">Build an "audit trail" demo specifically for compliance officers — not PMs, not analysts. Show the full lineage of one AI-generated IC memo: every claim, every source, every decision point. This is a procurement unlock for regulated institutions that Rogo can't match without AlphaSense's content layer.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 4 -->
+  <section class="lesson" id="lesson-4">
+    <div class="lesson-inner">
+      <div class="lesson-meta">
+        <span class="lesson-num">04</span>
+        <span class="lesson-label">On Infrastructure</span>
+      </div>
+      <h2>The Harness Matters More Than the Model</h2>
+      <blockquote class="pull-quote">
+        <p>"Think about the fundamental difference between Claude Code when it came out and Claude co-work versus OpenAI and ChatGPT. The models were actually fairly similar, but the harness and the way that it was presented from Claude was far better. And it just allowed the models to exercise more of their long running capabilities."</p>
+      </blockquote>
+      <blockquote class="pull-quote">
+        <p>"As the models get smarter, you kind of want to be less prescriptive, less of a Rube Goldberg machine, and just think about what are the simplest, best, highest quality tools."</p>
+      </blockquote>
+      <p class="bridge-label">The AlphaSense PM Lens</p>
+      <p class="bridge-text">The real race isn't which company has the best model — it's which company has the best harness. AlphaSense's harness advantage is its data: 10+ years of broker research, expert call transcripts, filings, and earnings — all structured, permissioned, and source-attributed. No one else has that. The product bet is: build the harness that makes that data the context layer for every deal agent, so the model is always reasoning from AlphaSense's corpus, not a generic internet scrape.</p>
+      <div class="action-callout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L10.09 5.26L14.82 5.97L11.41 9.29L12.18 14L8 11.77L3.82 14L4.59 9.29L1.18 5.97L5.91 5.26L8 1Z" fill="#B5451B"/></svg>
+        <div>
+          <p class="action-label">In Practice</p>
+          <p class="action-text">Audit DD Workspace's current context injection — what data does the agent have access to when answering a deal question? What's missing that AlphaSense actually has (expert call transcripts on target company's sector, earnings calls, broker notes)? That gap between "what we have" and "what the agent uses" is the harness improvement that separates AlphaSense from a generic GPT wrapper.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 5 -->
+  <section class="lesson" id="lesson-5">
+    <div class="lesson-inner">
+      <div class="lesson-meta">
+        <span class="lesson-num">05</span>
+        <span class="lesson-label">On Retention</span>
+      </div>
+      <h2>The "Company Brain" Is the Retention Strategy</h2>
+      <blockquote class="pull-quote">
+        <p>"When anyone starts, we say, hey, just FYI, you're always being recorded. It's always being filtered into the company brain. We just have this huge reservoir of information."</p>
+      </blockquote>
+      <blockquote class="pull-quote">
+        <p>"It can also say, 'Hey Patrick, I see on your calendar on Thursday, you're meeting with this private credit firm. Here's all the information you should know — all the use cases that will resonate and all the ROI metrics that firms we've worked with in the past would want to hear.'"</p>
+      </blockquote>
+      <p class="bridge-label">The AlphaSense PM Lens</p>
+      <p class="bridge-text">Rogo's internal "Shrek" system is a preview of what they're building for customers — an always-on agent that gets smarter with every interaction, surfaces relevant context proactively, and compounds institutional memory. For DD Workspace, the equivalent is a workspace that learns from every deal a firm runs: which agents they used, which outputs they accepted, what questions they asked repeatedly. Right now, each workspace is essentially stateless across deals. That's the gap — and closing it is the retention argument.</p>
+      <div class="action-callout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L10.09 5.26L14.82 5.97L11.41 9.29L12.18 14L8 11.77L3.82 14L4.59 9.29L1.18 5.97L5.91 5.26L8 1Z" fill="#B5451B"/></svg>
+        <div>
+          <p class="action-label">In Practice</p>
+          <p class="action-text">Define what a "deal memory" feature would look like for DD Workspace — cross-deal context that makes Agent 2 smarter based on what Agent 1 learned. Draft a one-pager on this as a Q1 roadmap item. The retention argument almost writes itself: the longer you use it, the smarter it gets about your firm's deals.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LESSON 6 -->
+  <section class="lesson" id="lesson-6">
+    <div class="lesson-inner">
+      <div class="lesson-meta">
+        <span class="lesson-num">06</span>
+        <span class="lesson-label">On Strategy</span>
+      </div>
+      <h2>You Win by Going Deeper, Not Broader</h2>
+      <blockquote class="pull-quote">
+        <p>"The industry itself needs to have enough complexity and depth in the types of data, the types of systems of record that people use, the types of deployment models that you can spend a lot of effort solving those problems in order to have a wedge to solve everything else."</p>
+      </blockquote>
+      <blockquote class="pull-quote">
+        <p>"I can build a huge business just concentrating where I am today."</p>
+      </blockquote>
+      <p class="bridge-label">The AlphaSense PM Lens</p>
+      <p class="bridge-text">The temptation for DD Workspace is to widen — support more asset classes, more firm sizes, more deal types. But Gabe's playbook shows the vertical AI moat gets built by going absurdly deep on one customer type until you know more about their workflow than they do. For DD Workspace, that's the PE buyout analyst running a first-pass diligence on a private company. Own that workflow completely — every coordination touchpoint, every agent, every output — before expanding to credit, secondaries, or M&A advisory.</p>
+      <div class="action-callout">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1L10.09 5.26L14.82 5.97L11.41 9.29L12.18 14L8 11.77L3.82 14L4.59 9.29L1.18 5.97L5.91 5.26L8 1Z" fill="#B5451B"/></svg>
+        <div>
+          <p class="action-label">In Practice</p>
+          <p class="action-text">Write a "depth manifesto" for DD Workspace's Q4 strategy: one ICP (PE buyout analyst), one deal type (first-pass diligence), one measure of success (time from CIM to IC memo). Present it to the team as the counter-argument to ICP expansion. Narrowing is actually the accelerant.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section id="closing">
+    <div class="closing-inner">
+      <p class="closing-eyebrow">The Single Question</p>
+      <p class="closing-question">If Rogo is building the exchange — the communication venue, the transaction venue, the data layer, the system of record — and AlphaSense is building the intelligence layer, does AlphaSense win by integrating into Rogo's exchange, or by becoming the exchange itself before Rogo does?</p>
+    </div>
+  </section>
+
+  <!-- REFLECTIONS -->
+  <section id="reflect">
+    <div class="reflect-inner">
+      <p class="reflect-section-label">Before reading</p>
+      <div class="reflect-block">
+        Rogo's vision = plumbing for private deal makers: system of record for comms, data, workflow, transaction, intelligence — not just a workspace. Most automatable parts of deal workflow = coordination/admin (VDR coordination, handoffs between parties) — humans don't value time spent here. Regulatory compliance is the moat — banks are heavily regulated, MNPI data leakage = billion-dollar fines; vertical AI wins over OpenAI/Anthropic because of regulatory intimacy. Rogo's internal tooling is magical — every employee conversation is recorded from day one, powering a company brain. Dashboard shows goals + north star topics filterable by what people are working on. Always-on agent scrapes and captures intelligence; gets smarter with every chat.
+      </div>
+
+      <p class="reflect-after-label">After reading</p>
+      <div class="prompt-chips">
+        <button class="chip" onclick="insertChip(this)">Where AlphaSense has the advantage</button>
+        <button class="chip" onclick="insertChip(this)">What I want to bring to the roadmap</button>
+        <button class="chip" onclick="insertChip(this)">Where Rogo is ahead</button>
+        <button class="chip" onclick="insertChip(this)">What I pushed back on</button>
+      </div>
+      <div class="quill-wrapper">
+        <div id="editor"></div>
+      </div>
+      <div class="reflect-footer">
+        <span id="save-status" class="save-status">Auto-saved</span>
+        <span id="reflect-date"></span>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/quill@2/dist/quill.js"></script>
+<script>
+  const progressBar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = (docHeight > 0 ? (scrollTop / docHeight) * 100 : 0) + '%';
+  });
+
+  const dots = document.querySelectorAll('.nav-dot');
+  const navLabel = document.getElementById('nav-label-text');
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const target = document.getElementById(dot.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  const sections = ['lesson-1','lesson-2','lesson-3','lesson-4','lesson-5','lesson-6','closing','reflect'];
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = sections.indexOf(entry.target.id);
+        if (idx >= 0 && dots[idx]) {
+          dots.forEach(d => d.classList.remove('active'));
+          dots[idx].classList.add('active');
+          navLabel.textContent = dots[idx].dataset.label;
+        }
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
+
+  const STORAGE_KEY = 'reflect-rogo-alphasense-pm-2026-09-25';
+  const quill = new Quill('#editor', {
+    theme: 'snow',
+    placeholder: 'What else surfaced after reading?',
+    modules: { toolbar: [['bold','italic','underline'],['blockquote'],['clean']] }
+  });
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) { try { quill.setContents(JSON.parse(saved)); } catch(e) {} }
+
+  const statusEl = document.getElementById('save-status');
+  let saveTimer;
+  quill.on('text-change', () => {
+    clearTimeout(saveTimer);
+    statusEl.textContent = 'Saving…';
+    statusEl.classList.remove('saved');
+    saveTimer = setTimeout(() => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(quill.getContents()));
+      statusEl.textContent = 'Saved';
+      statusEl.classList.add('saved');
+    }, 800);
+  });
+
+  document.getElementById('reflect-date').textContent = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+  function insertChip(btn) {
+    const text = btn.textContent + ': ';
+    const range = quill.getSelection(true);
+    quill.insertText(range ? range.index : quill.getLength(), text);
+    quill.focus();
+  }
+</script>
+</body>
+</html>

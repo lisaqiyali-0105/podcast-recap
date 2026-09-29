@@ -78,5 +78,15 @@
     "emoji": "💡",
     "lessonCount": 7,
     "filename": "notes/2026-08-20-lulu-cheng-storyteller-playbook.html"
+  },
+  {
+    "id": "2026-09-25-rogo-playbook-alphasense-pm",
+    "title": "6 lessons Rogo taught me about winning deal workflow",
+    "source": "Why OpenAI and Anthropic Won't Win Finance | Gabe Stengel on Invest Like the Best",
+    "persona": "pm",
+    "date": "2026-09-25",
+    "emoji": "🚀",
+    "lessonCount": 6,
+    "filename": "notes/2026-09-25-rogo-playbook-alphasense-pm.html"
   }
 ]
